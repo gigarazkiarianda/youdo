@@ -1,0 +1,29 @@
+{
+    "name": "youdo-backend",
+    "version": "1.0.0",
+    "description": "A backend application for managing projects, to-dos, and social media features.",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "mocha tests/*.test.js"
+    },
+    "author": "Giga Razki Arianda",
+    "license": "MIT",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "body-parser": "^1.20.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.1",
+        "mysql2": "^3.10.3",
+        "nodemailer": "^6.9.5",
+        "sequelize": "^6.37.3",
+        "sequelize-cli": "^6.6.2"
+    },
+    "devDependencies": {
+        "chai": "^4.3.7",
+        "mocha": "^10.2.0",
+        "supertest": "^6.3.3"
+    }
+}
