@@ -1,7 +1,10 @@
-export const fetchData = async (url, options = {}) => {
-    const response = await fetch(url, options);
-    if(!response.oke) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
-}
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});

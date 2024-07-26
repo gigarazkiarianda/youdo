@@ -1,4 +1,3 @@
-// src/routes/AppRoutes.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
@@ -10,7 +9,7 @@ import Todos from '../pages/Todos';
 import Notifications from '../pages/Notifications';
 import SocialMedia from '../pages/SocialMedia';
 
-function AppRoutes() {
+const AppRoutes = () => {
   return (
     <Router>
       <Routes>
@@ -25,6 +24,6 @@ function AppRoutes() {
       </Routes>
     </Router>
   );
-}
+};
 
 export default AppRoutes;

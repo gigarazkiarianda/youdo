@@ -1,15 +1,16 @@
-// src/services/authService.js
+import axios from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const login = async (credentials) => {
-  const response = await fetch(`${API_URL}/api/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-  });
-  return response.json();
+export const login = async (username, password) => {
+  const response = await axios.post(`${API_URL}/api/authlogin`, { username, password });
+  localStorage.setItem('token', response.data.token);
+  return response.data;
 };
 
-// Other auth-related services
+export const register = async (email, password) => {
+  const response = await axios.post(`${API_URL}/api/auth/register`, {email, password});
+  return response.data;
+};
+
+
