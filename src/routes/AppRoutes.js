@@ -3,11 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import UserProfile from '../pages/UserProfile';
-import Projects from '../pages/Projects';
-import Todos from '../pages/Todos';
-import Notifications from '../pages/Notifications';
-import SocialMedia from '../pages/SocialMedia';
+import Dashboard from '../pages/Dashboard'; // Corrected the import name to start with an uppercase letter
 
 const AppRoutes = () => {
   return (
@@ -16,11 +12,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/todos" element={<Todos />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/social-media" element={<SocialMedia />} />
+        <Route path="/dashboard" element={<Dashboard />} /> {/* Corrected here as well */}
       </Routes>
     </Router>
   );

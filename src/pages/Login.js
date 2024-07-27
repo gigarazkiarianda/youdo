@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/authServices'; // Make sure this function is updated to handle username
+import { login, logout } from '../services/authServices'; // Import logout
 import { validateLogin } from '../utils/validationUtils'; // Ensure this function is updated for username
 import styles from '../style/login.module.css'; 
 
@@ -16,13 +16,13 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const validationError = validateLogin(username, password); // Pass username for validation
+    const validationError = validateLogin(username, password); 
     if (validationError) {
       setError(validationError);
       return;
     }
     try {
-      await login(username, password, rememberMe); // Pass username to login function
+      await login(username, password, rememberMe); 
       navigate('/dashboard');
     } catch (err) {
       setError('Login failed. Please try again.');
@@ -37,6 +37,11 @@ const Login = () => {
   const handleAppleLogin = () => {
     // Handle Apple login logic here
     console.log('Apple login');
+  };
+
+  const handleLogout = () => {
+    logout(); // Clear token from localStorage
+    navigate('/login'); // Redirect to login page
   };
 
   return (
