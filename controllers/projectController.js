@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-
 exports.getAllProjects = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM projects');
@@ -9,7 +8,6 @@ exports.getAllProjects = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving projects' });
   }
 };
-
 
 exports.getProjectById = async (req, res) => {
   try {
@@ -24,7 +22,6 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
-
 exports.createProject = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -34,7 +31,6 @@ exports.createProject = async (req, res) => {
     res.status(500).json({ message: 'Error creating project' });
   }
 };
-
 
 exports.updateProject = async (req, res) => {
   try {
@@ -49,7 +45,6 @@ exports.updateProject = async (req, res) => {
     res.status(500).json({ message: 'Error updating project' });
   }
 };
-
 
 exports.deleteProject = async (req, res) => {
   try {

@@ -24,13 +24,20 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      jwtSecret: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: '', // Set default value as empty string or use `NULL` if appropriate
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },

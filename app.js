@@ -18,7 +18,7 @@ const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
-const socialMediaRoutes = require('./routes/socialMediaRoutes');
+
 
 // Route setup
 app.use('/api/auth', authRoutes);
@@ -26,14 +26,14 @@ app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/notifications', notificationRoutes);
-app.use('/api/social-media-posts', socialMediaRoutes);
+
 
 // Error handling middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000; // Use the PORT from the .env file
 
-// Start the server
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

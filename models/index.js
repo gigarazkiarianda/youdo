@@ -9,5 +9,4 @@ module.exports = {
   Project,
   Todo,
   Notification,
-  SocialMedia,
 };

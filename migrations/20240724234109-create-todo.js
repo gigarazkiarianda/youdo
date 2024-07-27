@@ -14,15 +14,28 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      completed: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true, // You can set it to false if you want to make it mandatory
       },
-      projectId: {
+      category: {
+        type: Sequelize.STRING,
+        allowNull: true, // You can set it to false if you want to make it mandatory
+      },
+      deadline: {
+        type: Sequelize.DATE,
+        allowNull: true, // You can set it to false if you want to make it mandatory
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'pending', // Default status can be set to 'pending', 'in-progress', etc.
+      },
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'projects',
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',

@@ -1,13 +1,12 @@
 const express = require('express');
-const { getAllTodos, getTodoById, createTodo, updateTodo, deleteTodo } = require('../controllers/todoController');
-const authMiddleware = require('../middleware/authMiddleware');
-
 const router = express.Router();
+const todoController = require('../controllers/todoController');
 
-router.get('/', authMiddleware, getAllTodos);
-router.get('/:id', authMiddleware, getTodoById);
-router.post('/', authMiddleware, createTodo);
-router.put('/:id', authMiddleware, updateTodo);
-router.delete('/:id', authMiddleware, deleteTodo);
+// Routes without token authentication
+router.get('/todos', todoController.getAllTodos);
+router.post('/todos', todoController.createTodo);
+router.get('/todos/:id', todoController.getTodoById);
+router.put('/todos/:id', todoController.updateTodo);
+router.delete('/todos/:id', todoController.deleteTodo);
 
 module.exports = router;
