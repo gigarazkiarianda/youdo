@@ -1,0 +1,152 @@
+/* register.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #1e3a8a; /* Navy blue */
+    padding: 20px;
+  }
+  
+  .title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .formWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Glass effect */
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .inputGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .inputField:focus {
+    border-color: #2563eb;
+  }
+  
+  .submitButton {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submitButton:hover {
+    background-color: #1e40af;
+  }
+  
+  .errorMessage {
+    color: red;
+    margin-bottom: 1rem;
+  }
+  
+  .signInContainer {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .signInText {
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  
+  .signInLink {
+    color: #ff0000;
+    text-decoration: underline;
+  }
+  
+  .signInLink:hover {
+    color: #ff3838;
+  }
+  
+  .alternativeRegisterContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .googleButton,
+  .appleButton {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .googleButton {
+    background-color: #ea4335;
+    color: #fff;
+  }
+  
+  .googleButton:hover {
+    background-color: #d93025;
+  }
+  
+  .appleButton {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .appleButton:hover {
+    background-color: #7e7e7e;
+  }
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .formWrapper,
+    .alternativeRegisterContainer {
+      width: 100%;
+      padding: 1.5rem;
+    }
+  }
+  
