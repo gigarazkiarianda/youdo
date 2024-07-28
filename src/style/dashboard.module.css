@@ -1,267 +1,292 @@
 /* dashboard.module.css */
 
-/* Container style for the dashboard */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f3f4f6; /* Light gray background */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  width: 100%;
+  font-family: Arial, sans-serif;
 }
 
-/* Header styling */
 .header {
-    width: 100%;
-    padding: 1rem;
-    background-color: #1e3a8a; /* Blue background */
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e3a8a;
+  padding: 10px 20px;
+  color: white;
+  width: 100%;
 }
 
-/* Logo and Search Container */
 .logoSearchContainer {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 36rem;
+  display: flex;
+  align-items: center;
 }
 
-/* Adjusting the title and search bar to fit better */
 .title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    flex: 1; /* Allow the title to take available space */
+  font-size: 1.5rem;
+  margin-right: 20px;
 }
 
 .searchContainer {
-    display: flex;
-    align-items: center;
-    flex: 3;
-    width: 40%;
-    margin-right: 1000px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Make search input span the full width */
 .searchInput {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db; /* Gray border */
-    border-radius: 0.375rem; /* Rounded corners */
-    color: black; /* Change text color to black */
+  display: none;
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  color: black;
 }
 
 .searchIcon {
-    margin-left: -2.5rem;
-    color: #495057;
+  cursor: pointer;
 }
 
-/* Dropdown Menu */
+.searchContainer.active .searchInput {
+  display: block;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 12px;
+}
+
+.icon {
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .dropdownContainer {
-    position: relative;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .dropdownButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: white;
-    display: flex;
-    align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  align-items: center;
 }
 
 .dropdownMenu {
-    margin-top: 30px;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #1e3a8a;
-    border: 1px solid #1e3a8a;
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    min-width: 10rem;
+  margin-top: 5px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #1e3a8a;
+  border: 1px solid #1e3a8a;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  min-width: 10rem;
+}
+
+.dropdownContainer:hover .dropdownMenu {
+  display: flex;
 }
 
 .dropdownItem {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    text-align: left;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-align: left;
 }
 
 .dropdownItem:hover {
-    background-color: #0062c4;
+  background-color: #0062c4;
 }
 
-/* Main content area */
 .main {
-    flex-grow: 1;
-    width: 100%;
-    max-width: 36rem;
-    padding: 1rem;
-    box-sizing: border-box;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-/* Card styling for task container */
+.flexContainer {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
 .card {
-    padding: 1.5rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 1 1 calc(45% - 20px);
+  max-width: 500px;
+  min-width: 300px;
+  margin: 10px 0;
 }
 
-/* Tasks title styling */
+.cardTaskManager {
+  order: 1;
+}
+
 .tasksTitle {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
-/* Input group for adding tasks */
 .inputGroup {
-    margin-bottom: 1rem;
+  display: flex;
+  margin-bottom: 10px;
 }
 
-/* Input styling */
 .input {
-    width: calc(100% - 5rem); /* Adjust to fit within container */
-    padding: 0.5rem;
-    border: 1px solid #d1d5db; /* Gray border */
-    border-radius: 0.375rem; /* Rounded corners */
-    margin-bottom: 0.5rem;
-    box-sizing: border-box;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
-/* Add button styling */
 .addButton {
-    width: 5rem; /* Fixed width */
-    padding: 0.5rem;
-    color: white;
-    background-color: #2563eb; /* Blue button */
-    border-radius: 0.375rem; /* Rounded corners */
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* Hover effect for add button */
 .addButton:hover {
-    background-color: #1d4ed8; /* Darker blue on hover */
+  background-color: #1b2565;
 }
 
-/* Task list styling */
-.taskList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Individual task item styling */
-.taskItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    background-color: #f9fafb; /* Light gray background */
-    border-radius: 0.375rem; /* Rounded corners */
-    margin-bottom: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* Delete button styling */
-.deleteButton {
-    padding: 0.25rem 0.5rem;
-    color: white;
-    background-color: #ef4444; /* Red button */
-    border-radius: 0.375rem; /* Rounded corners */
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
-}
-
-/* Hover effect for delete button */
-.deleteButton:hover {
-    background-color: #dc2626; /* Darker red on hover */
-}
-
-/* No tasks message styling */
 .noTasksMessage {
-    text-align: center;
-    color: #6b7280; /* Gray text */
+  text-align: center;
+  color: #888;
 }
 
-/* Footer styling */
+.scrollView {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.taskList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.taskTitle {
+  font-size: 1rem;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.taskDate {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.taskActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editButton,
+.deleteButton {
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editButton {
+  background-color: #fca311;
+}
+
+.editButton:hover {
+  background-color: #c77b00;
+}
+
+.deleteButton {
+  background-color: #ff4c4c;
+}
+
+.deleteButton:hover {
+  background-color: #d43535;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.pageButton {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pageButton:hover {
+  background-color: #1b2565;
+}
+
+.activePage {
+  background-color: #1b2565;
+}
+
 .footer {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #1f2937; /* Dark gray background */
-    color: white;
-    text-align: center;
-    font-size: 0.75rem;
-    box-sizing: border-box;
-}
-
-/* Responsive Styles */
-@media (max-width: 1024px) {
-    .main {
-        max-width: 90%;
-    }
-}
-
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        padding: 1rem;
-        align-items: flex-start;
-    }
-
-    .logoSearchContainer {
-        margin-bottom: 1rem;
-    }
-
-    .searchContainer {
-        margin-left: 0;
-    }
-
-    .inputGroup {
-        flex-direction: column;
-    }
-
-    .input {
-        width: calc(100% - 2rem);
-        margin-bottom: 0.5rem;
-    }
-
-    .addButton {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .title {
-        font-size: 1.25rem;
-    }
-
-    .searchInput {
-        padding: 0.4rem;
-    }
-
-    .addButton {
-        padding: 0.4rem;
-        font-size: 0.875rem;
-    }
-
-    .deleteButton {
-        padding: 0.2rem 0.4rem;
-    }
-
-    .footer {
-        font-size: 0.65rem;
-    }
+  background-color: #1e3a8a;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
 }

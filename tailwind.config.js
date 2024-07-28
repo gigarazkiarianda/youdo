@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'light-beam': 'lightBeam 10s infinite alternate',
+        'light-beam': 'lightBeam 4s infinite alternate',
         'fade-in': 'fadeIn 1s ease-in-out',
         'fade-in-delay-1000': 'fadeIn 1s ease-in-out 1000ms',
         'fade-in-delay-2000': 'fadeIn 1s ease-in-out 2000ms',
@@ -14,8 +14,8 @@ module.exports = {
       },
       keyframes: {
         lightBeam: {
-          '0%': { transform: 'translateY(-100%)', opacity: '0.2' },
-          '100%': { transform: 'translateY(100%)', opacity: '0.8' },
+          '0%': { opacity: '0.2', transform: 'translateY(-100%)' },
+          '100%': { opacity: '0.8', transform: 'translateY(100%)' },
         },
         fadeIn: {
           '0%': { opacity: '0' },
