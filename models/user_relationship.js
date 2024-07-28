@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../config/db');
 const User = require('./user'); // Asumsi Anda memiliki model User
 
 const UserRelationship = sequelize.define('UserRelationship', {

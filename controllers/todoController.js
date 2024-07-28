@@ -1,4 +1,4 @@
-// controllers/todoController.js
+
 const pool = require('../config/db');
 
 // Get all todos (public route)
