@@ -1,5 +1,4 @@
-/* dashboard.module.css */
-
+/* Global Styles */
 html,
 body {
   margin: 0;
@@ -44,6 +43,7 @@ body {
 .logoSearchContainer {
   display: flex;
   align-items: center;
+  gap: 20px;
 }
 
 .title {
@@ -53,6 +53,7 @@ body {
 
 .searchContainer {
   position: relative;
+  width: 300px;
 }
 
 .searchInput {
@@ -111,19 +112,46 @@ body {
   text-align: center;
 }
 
-.iconContainer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-right: 12px;
+.notificationsDropdown {
+  position: fixed;
+  top: 60px; /* Adjust based on header height */
+  right: 10px;
+  width: 250px;
+  background-color: #fcdd9b;
+  border: 1px solid #dddddd44;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1000;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.notificationsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notificationItem {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.noNotificationsMessage {
+  text-align: center;
+  color: #666;
 }
 
 .icon {
-  color: #3e3e3e; /* Darker icon color for contrast */
-  font-size: 20px;
+  margin-left: 10px;
   cursor: pointer;
 }
 
+.iconContainer {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
 
 .dropdownContainer {
   position: relative;
@@ -170,51 +198,94 @@ body {
 .dropdownItem:hover {
   background-color: #bfae9d; /* Slightly darker cream color on hover */
 }
+.chatsDropdown {
+  position: fixed;
+  right: 0;
+  top: 80px; /* Adjust as needed */
+  width: 300px;
+  background-color: #ffcf94; /* Cream color */
+  border: 1px solid #d8cfc4;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.chatsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chatItem {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.noChatsMessage {
+  text-align: center;
+  padding: 20px;
+}
+
 
 .main {
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
   padding: 20px;
   gap: 20px;
-  flex-wrap: wrap;
   margin-top: 60px; /* Adjust to prevent content overlap with fixed header */
 }
 
-.flexContainer {
-  display: flex;
-  flex: 1;
+/* 4-Column Grid Layout */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  flex-wrap: wrap;
   width: 100%;
+}
+
+.gridItem {
+  grid-column: span 2;
 }
 
 .leftColumn,
 .rightColumn {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+.leftColumn {
+  grid-column: span 2;
+}
+
+.rightColumn {
+  grid-column: span 2;
+}
+
+/* Card Styles */
 .card {
   background: rgba(255, 255, 255, 0.2); /* Glass effect with transparency */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Soft shadow */
   backdrop-filter: blur(10px); /* Glass blur effect */
-  margin-bottom: 20px;
   padding: 20px;
-  max-width: 100%;
   overflow: hidden;
 }
 
 .cardTaskManager,
 .cardProjects,
-.cardFollowers {
+.cardFollowers,
+.cardChats {
   background: rgba(255, 255, 255, 0.3); /* White background for all cards with transparency */
 }
 
-.cardCalendar {
-  background: rgba(255, 255, 255, 0.3); /* Ensure calendar card has same background as other cards */
-}
-
-.tasksTitle {
+.tasksTitle,
+.projectsTitle,
+.followersTitle,
+.chatsTitle {
   margin: 0 0 10px;
   font-size: 1.25rem;
   font-weight: bold;
@@ -225,28 +296,43 @@ body {
   overflow-y: auto;
 }
 
-.noTasksMessage {
+.noTasksMessage,
+.noProjectsMessage,
+.noFollowersMessage,
+.noChatsMessage {
   text-align: center;
   color: #666;
 }
 
-.taskList {
+.taskList,
+.projectList,
+.followerList,
+.chatList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.taskItem {
+.taskItem,
+.projectItem,
+.followerItem,
+.chatItem {
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.taskTitle {
+.taskTitle,
+.projectTitle,
+.followerName,
+.chatName {
   font-size: 1rem;
   font-weight: bold;
 }
 
-.taskDate {
+.taskDate,
+.projectDate,
+.followerStatus,
+.chatMessage {
   font-size: 0.875rem;
   color: #888;
 }
@@ -254,7 +340,10 @@ body {
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 10px;
+  gap: 5px; /* Add spacing between buttons */
+  flex-wrap: wrap;
 }
 
 .pageButton {
@@ -263,10 +352,16 @@ body {
   padding: 5px 10px;
   margin: 0 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .pageButton:hover {
   background: #f0f0f0;
+}
+
+.pageButton:disabled {
+  background: #f8f8f8;
+  cursor: not-allowed;
 }
 
 .activePage {
@@ -282,29 +377,15 @@ body {
   font-size: 0.875rem;
 }
 
-.selectedDate {
-  margin-top: 10px;
-  font-size: 0.875rem;
-  color: #555;
-}
-
-.calendar {
-  width: 100%; /* Ensure calendar fits within its container */
-  border: 1px solid #d8cfc4; /* Use cream color for border */
-  border-radius: 5px;
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
-  background: rgba(247, 244, 242, 0.1); /* Lighter cream color for background */
-}
-
 /* Responsive Styles */
 @media (max-width: 1024px) {
-  .flexContainer {
-    flex-direction: column;
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .leftColumn,
   .rightColumn {
-    width: 100%;
+    grid-column: span 2;
   }
 }
 
@@ -322,64 +403,35 @@ body {
 
   .searchContainer {
     width: 100%;
-    margin-top: 10px;
-    justify-content: space-between;
   }
 
-  .searchInput {
+  .main {
+    flex-direction: column;
+  }
+
+  .card {
     width: 100%;
   }
 
-  .dropdownContainer {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .dropdownMenu {
-    position: static;
-    margin-top: 10px;
-    box-shadow: none; /* Remove shadow on mobile */
+  .gridContainer {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .header {
-    padding: 10px;
+  .searchInput {
+    font-size: 0.875rem;
   }
 
   .title {
     font-size: 1.25rem;
   }
 
-  .searchInput {
-    padding: 8px;
-  }
-
-  .searchIcon {
-    right: 8px;
-  }
-
-  .card {
-    padding: 15px;
-  }
-
-  .tasksTitle {
-    font-size: 1rem;
-  }
-
-  .taskItem {
-    padding: 8px;
-  }
-
-  .pagination {
-    flex-direction: column;
+  .dropdownMenu {
+    min-width: 8rem;
   }
 
   .pageButton {
-    padding: 5px;
-  }
-
-  .footer {
-    font-size: 0.75rem;
+    padding: 3px 6px;
   }
 }
