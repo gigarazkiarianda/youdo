@@ -6,14 +6,14 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #1e3a8a; /* Navy blue */
+  background: linear-gradient(to right, #f9f1e7, #f79c4d); /* Gradient background */
   padding: 20px;
 }
 
 .title {
   margin-bottom: 1.5rem;
   font-size: 2rem;
-  color: #fff;
+  color: #3e3e3e; /* Darker text color for contrast */
   font-weight: bold;
 }
 
@@ -22,7 +22,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  background: rgba(255, 255, 255, 0.3); /* Semi-transparent white */
   backdrop-filter: blur(10px); /* Glass effect */
   border-radius: 10px;
   padding: 2rem;
@@ -38,7 +38,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #fff;
+  color: #3e3e3e; /* Darker text color for contrast */
 }
 
 .inputField {
@@ -51,14 +51,14 @@
 }
 
 .inputField:focus {
-  border-color: #2563eb;
+  border-color: #f79c4d; /* Use accent color for focus */
 }
 
 .submitButton {
   width: 100%;
   padding: 10px;
   margin-bottom: 1rem;
-  background-color: #2563eb;
+  background-color: #f79c4d; /* Accent color */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -67,11 +67,11 @@
 }
 
 .submitButton:hover {
-  background-color: #1e40af;
+  background-color: #e58e26; /* Slightly darker shade for hover */
 }
 
 .errorMessage {
-  color: red;
+  color: #ff3838; /* Error color */
   margin-bottom: 1rem;
 }
 
@@ -89,7 +89,7 @@
 
 .rememberMeLabel {
   font-size: 0.9rem;
-  color: #fff;
+  color: #3e3e3e; /* Darker text color for contrast */
 }
 
 .signUpContainer {
@@ -99,16 +99,16 @@
 
 .signUpText {
   font-size: 0.9rem;
-  color: #fff;
+  color: #3e3e3e; /* Darker text color for contrast */
 }
 
 .signUpLink {
-  color: #ff0000;
+  color: #f79c4d; /* Accent color */
   text-decoration: underline;
 }
 
 .signUpLink:hover {
-  color: #ff3838;
+  color: #e58e26; /* Slightly darker shade for hover */
 }
 
 .alternativeLoginContainer {
@@ -135,21 +135,21 @@
 }
 
 .googleButton {
-  background-color: #ea4335;
+  background-color: #ea4335; /* Google red */
   color: #fff;
 }
 
 .googleButton:hover {
-  background-color: #d93025;
+  background-color: #d93025; /* Slightly darker shade for hover */
 }
 
 .appleButton {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #ffffff; /* Apple white */
+  color: #000000; /* Apple black text */
 }
 
 .appleButton:hover {
-  background-color: #7e7e7e;
+  background-color: #f0f0f0; /* Slightly darker shade for hover */
 }
 
 .icon {

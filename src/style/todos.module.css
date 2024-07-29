@@ -1,0 +1,317 @@
+/* dashboard.module.css */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #f9f1e7, #f79c4d); /* Gradient background */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffcf94; /* Cream color */
+  padding: 10px 20px;
+  color: #3e3e3e; /* Darker text color for contrast */
+  width: 100%;
+  box-sizing: border-box; /* Ensure padding and border are included in the element’s total width and height */
+}
+
+.logoSearchContainer {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-right: 20px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.searchInput {
+  display: none;
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  color: black;
+}
+
+.searchIcon {
+  cursor: pointer;
+}
+
+.searchContainer.active .searchInput {
+  display: block;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 12px;
+}
+
+.icon {
+  color: #3e3e3e; /* Darker icon color for contrast */
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.dropdownContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #3e3e3e; /* Darker text color for contrast */
+  display: flex;
+  align-items: center;
+}
+
+.dropdownMenu {
+  margin-top: 5px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #ffcf94; /* Cream color */
+  border: 1px solid #d8cfc4;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  min-width: 10rem;
+}
+
+.dropdownContainer:hover .dropdownMenu {
+  display: flex;
+}
+
+.dropdownItem {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-align: left;
+  color: #3e3e3e; /* Darker text color for contrast */
+}
+
+.dropdownItem:hover {
+  background-color: #bfae9d; /* Slightly darker cream color on hover */
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column; /* Stack cards vertically */
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.2); /* Glass effect with transparency */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Soft shadow */
+  backdrop-filter: blur(10px); /* Glass blur effect */
+  padding: 20px;
+  max-width: 500px;
+  width: 100%; /* Full width on mobile */
+  margin: 10px 0;
+}
+
+.cardTaskManager {
+  background: rgba(244, 240, 235, 0.3); /* Light cream color for task manager card with transparency */
+}
+
+.tasksTitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.addButton {
+  background-color: #ffcf94; /* Cream color */
+  color: #3e3e3e; /* Darker text color for contrast */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #bfae9d; /* Slightly darker cream color on hover */
+}
+
+.noTasksMessage {
+  text-align: center;
+  color: #666;
+}
+
+.scrollView {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.taskList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.taskTitle {
+  font-size: 1rem;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.taskDate {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.taskActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editButton,
+.deleteButton {
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editButton {
+  background-color: #fca311; /* Amber */
+}
+
+.editButton:hover {
+  background-color: #c77b00; /* Darker amber */
+}
+
+.deleteButton {
+  background-color: #ff4c4c; /* Red */
+}
+
+.deleteButton:hover {
+  background-color: #d43535; /* Darker red */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.pageButton {
+  background-color: #ffcf94; /* Cream color */
+  color: #3e3e3e; /* Darker text color for contrast */
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pageButton:hover {
+  background-color: #bfae9d; /* Slightly darker cream color on hover */
+}
+
+.activePage {
+  background-color: #bfae9d; /* Slightly darker cream color */
+}
+
+.footer {
+  background-color: #ffcf94; /* Cream color */
+  color: #3e3e3e; /* Darker text color for contrast */
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .flexContainer {
+    flex-direction: row; /* Align cards horizontally */
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card {
+    max-width: calc(50% - 20px); /* Two cards per row */
+  }
+}
+
+/* Desktop and larger screens */
+@media (min-width: 1024px) {
+  .card {
+    max-width: 500px; /* Limit card width */
+  }
+}

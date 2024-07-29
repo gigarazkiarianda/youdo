@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import Dashboard from '../pages/Dashboard'; // Corrected the import name to start with an uppercase letter
+import Dashboard from '../pages/Dashboard'; 
+import Todos from '../pages/todos';
 
 const AppRoutes = () => {
   return (
@@ -12,7 +13,8 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Corrected here as well */}
+        <Route path="/dashboard" element={<Dashboard />} /> 
+        <Route path="/todos" element={<Todos/>}/>
       </Routes>
     </Router>
   );

@@ -1,113 +1,127 @@
-import React, { useState } from "react";
+// src/components/Dashboard.jsx
+
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import styles from "../style/dashboard.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaEnvelope } from "react-icons/fa";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Import the calendar styles
+import { tasks, projects, followers } from '../data/DashboardDummy'; // Import dummy data
+
+const ITEMS_PER_PAGE = 5;
 
 const Dashboard = ({ username }) => {
-  const [task, setTask] = useState("");
-  const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState({ tasks: [], projects: [], followers: [] });
+  const [date, setDate] = useState(new Date());
   const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5; // Number of tasks to display per page
   const navigate = useNavigate();
 
-  // Handle logout
-  const handleLogout = () => {
-    navigate("/login");
+  // Handle navigation
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
-  const handleProfile = () => {
-    navigate("/profile");
-  };
-
-  const handleSettings = () => {
-    navigate("/settings");
-  };
-
-  const handlemyTodos = () => {
-    navigate("/todos")
-  }
-
-  const handleAddTask = () => {
-    if (task.trim() === "") {
-      setError("Task cannot be empty");
+  // Search functionality
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setSearchResults({ tasks: [], projects: [], followers: [] });
       return;
     }
 
-    const newTask = {
-      id: Date.now(),
-      title: task,
-      date: new Date().toLocaleDateString(),
-    };
-
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-    setTask("");
-    setError(null);
-  };
-
-  const handleDeleteTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  };
-
-  const handleEditTask = (id) => {
-    const taskToEdit = tasks.find((task) => task.id === id);
-    if (taskToEdit) {
-      setTask(taskToEdit.title);
-      setIsEditing(id);
-    }
-  };
-
-  const handleSaveTask = () => {
-    if (task.trim() === "") {
-      setError("Task cannot be empty");
-      return;
-    }
-
-    setTasks((prevTasks) =>
-      prevTasks.map((t) => (t.id === isEditing ? { ...t, title: task } : t))
+    const searchTasks = tasks.filter(task =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setTask("");
-    setIsEditing(null);
-    setError(null);
+
+    const searchProjects = projects.filter(project =>
+      project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const searchFollowers = followers.filter(follower =>
+      follower.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setSearchResults({
+      tasks: searchTasks,
+      projects: searchProjects,
+      followers: searchFollowers
+    });
+  }, [searchQuery]);
+
+  // Pagination handlers
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
-  // Pagination Logic
-  const indexOfLastTask = currentPage * tasksPerPage;
-  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-  const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(tasks.length / tasksPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  // Get paginated data
+  const getPaginatedData = (data) => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    return data.slice(start, end);
+  };
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logoSearchContainer}>
           <h1 className={styles.title}>YOUDO</h1>
-          <div
-            className={`${styles.searchContainer} ${
-              isSearchOpen ? styles.active : ""
-            }`}
-          >
-            {isSearchOpen && (
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder="Search..."
-              />
-            )}
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchOpen(true)}
+              onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
+            />
             <FaSearch
               className={styles.searchIcon}
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
               size={20}
             />
+            {isSearchOpen && (
+              <div className={styles.searchDropdown}>
+                {searchQuery.trim() === '' ? null : searchResults.tasks.length === 0 && searchResults.projects.length === 0 && searchResults.followers.length === 0 ? (
+                  <div className={styles.noResultsMessage}>No results found</div>
+                ) : (
+                  <>
+                    {searchResults.tasks.length > 0 && (
+                      <div className={styles.searchSection}>
+                        <h3>Tasks</h3>
+                        <ul className={styles.searchList}>
+                          {searchResults.tasks.map((task) => (
+                            <li key={task.id} className={styles.searchItem}>{task.title}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {searchResults.projects.length > 0 && (
+                      <div className={styles.searchSection}>
+                        <h3>Projects</h3>
+                        <ul className={styles.searchList}>
+                          {searchResults.projects.map((project) => (
+                            <li key={project.id} className={styles.searchItem}>{project.name}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {searchResults.followers.length > 0 && (
+                      <div className={styles.searchSection}>
+                        <h3>Followers</h3>
+                        <ul className={styles.searchList}>
+                          {searchResults.followers.map((follower) => (
+                            <li key={follower.id} className={styles.searchItem}>{follower.name}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.dropdownContainer}>
@@ -123,96 +137,154 @@ const Dashboard = ({ username }) => {
           </button>
           {isDropdownOpen && (
             <div className={styles.dropdownMenu}>
-              <div className={styles.dropdownItem} onClick={handleProfile}>
-                Profile
-              </div>
-              <div className={styles.dropdownItem} onClick={handlemyTodos}>
-                myTodo
-              </div>
-              <div className={styles.dropdownItem} onClick={handleSettings}>
-                Settings
-              </div>
-              <div className={styles.dropdownItem} onClick={handleLogout}>
-                Logout
-              </div>
+              <div className={styles.dropdownItem} onClick={() => handleNavigation("/profile")}>Profile</div>
+              <div className={styles.dropdownItem} onClick={() => handleNavigation("/todos")}>MyTodo</div>
+              <div className={styles.dropdownItem} onClick={() => handleNavigation("/settings")}>Settings</div>
+              <div className={styles.dropdownItem} onClick={() => handleNavigation("/login")}>Logout</div>
             </div>
           )}
         </div>
       </header>
       <main className={styles.main}>
         <div className={styles.flexContainer}>
-          <div className={`${styles.card} ${styles.cardTaskManager}`}>
-            <h2 className={styles.tasksTitle}>Tasks</h2>
-            <div className={styles.inputGroup}>
-              <input
-                type="text"
-                className={styles.input}
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-                placeholder="Add a new task..."
-              />
-              {isEditing ? (
-                <button onClick={handleSaveTask} className={styles.addButton}>
-                  Save
-                </button>
-              ) : (
-                <button onClick={handleAddTask} className={styles.addButton}>
-                  Add
-                </button>
-              )}
-            </div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <div className={styles.scrollView}>
-              {currentTasks.length === 0 ? (
-                <p className={styles.noTasksMessage}>No tasks available</p>
-              ) : (
-                <ul className={styles.taskList}>
-                  {currentTasks.map((task) => (
+          <div className={styles.leftColumn}>
+            {/* Tasks Container */}
+            <div className={`${styles.card} ${styles.cardTaskManager}`}>
+              <h2 className={styles.tasksTitle}>Tasks</h2>
+              <ul className={styles.taskList}>
+                {getPaginatedData(tasks).length === 0 ? (
+                  <p className={styles.noTasksMessage}>No tasks available</p>
+                ) : (
+                  getPaginatedData(tasks).map((task) => (
                     <li key={task.id} className={styles.taskItem}>
                       <div>
                         <span className={styles.taskTitle}>{task.title}</span>
                         <span className={styles.taskDate}>{task.date}</span>
                       </div>
-                      <div className={styles.taskActions}>
-                        <button
-                          onClick={() => handleEditTask(task.id)}
-                          className={styles.editButton}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteTask(task.id)}
-                          className={styles.deleteButton}
-                        >
-                          Delete
-                        </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+              {/* Pagination Controls */}
+              <div className={styles.paginationControls}>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={styles.paginationButton}
+                >
+                  Previous
+                </button>
+                <span className={styles.paginationInfo}>
+                  Page {currentPage}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={getPaginatedData(tasks).length < ITEMS_PER_PAGE}
+                  className={styles.paginationButton}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+            {/* Projects Container */}
+            <div className={`${styles.card} ${styles.cardProjects}`}>
+              <h2 className={styles.tasksTitle}>Projects</h2>
+              <ul className={styles.taskList}>
+                {getPaginatedData(projects).length === 0 ? (
+                  <p className={styles.noTasksMessage}>No projects available</p>
+                ) : (
+                  getPaginatedData(projects).map((project) => (
+                    <li key={project.id} className={styles.taskItem}>
+                      <div>
+                        <span className={styles.taskTitle}>{project.name}</span>
+                        <span className={styles.taskDate}>{project.status}</span>
                       </div>
                     </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className={styles.pagination}>
-              {pageNumbers.map((number) => (
+                  ))
+                )}
+              </ul>
+              {/* Pagination Controls */}
+              <div className={styles.paginationControls}>
                 <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={`${styles.pageButton} ${
-                    currentPage === number ? styles.activePage : ""
-                  }`}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={styles.paginationButton}
                 >
-                  {number}
+                  Previous
                 </button>
-              ))}
+                <span className={styles.paginationInfo}>
+                  Page {currentPage}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={getPaginatedData(projects).length < ITEMS_PER_PAGE}
+                  className={styles.paginationButton}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className={styles.rightColumn}>
+            {/* Followers Container */}
+            <div className={`${styles.card} ${styles.cardFollowers}`}>
+              <h2 className={styles.tasksTitle}>Followers</h2>
+              <ul className={styles.taskList}>
+                {getPaginatedData(followers).length === 0 ? (
+                  <p className={styles.noTasksMessage}>No followers available</p>
+                ) : (
+                  getPaginatedData(followers).map((follower) => (
+                    <li key={follower.id} className={styles.taskItem}>
+                      <div>
+                        <span className={styles.taskTitle}>{follower.name}</span>
+                        <span className={styles.taskDate}>{follower.email}</span>
+                      </div>
+                    </li>
+                  ))
+                )}
+              </ul>
+              {/* Pagination Controls */}
+              <div className={styles.paginationControls}>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={styles.paginationButton}
+                >
+                  Previous
+                </button>
+                <span className={styles.paginationInfo}>
+                  Page {currentPage}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={getPaginatedData(followers).length < ITEMS_PER_PAGE}
+                  className={styles.paginationButton}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+            {/* Calendar Container */}
+            <div className={`${styles.card} ${styles.calendarContainer}`}>
+              <h2 className={styles.calendarTitle}>Calendar</h2>
+              <Calendar
+                onChange={setDate}
+                value={date}
+                className={styles.calendar}
+              />
             </div>
           </div>
         </div>
       </main>
       <footer className={styles.footer}>
-        &copy; 2024 YOUDO. All rights reserved.
-      </footer>
+      &copy; 2024 YOUDO. All rights reserved.
+    </footer>
     </div>
   );
+};
+
+Dashboard.propTypes = {
+  username: PropTypes.string.isRequired,
 };
 
 export default Dashboard;
