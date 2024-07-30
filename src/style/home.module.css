@@ -40,7 +40,7 @@
   margin-bottom: 24px;
   font-size: 2.25rem;
   font-weight: 800;
-  background: linear-gradient(to right, #853e00, #ff8c00); /* Gradient background */
+  background: linear-gradient(to right, #853e00, #ff8c00);  
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -51,17 +51,17 @@
   max-width: 400px;
   padding: 12px 24px;
   margin-top: 24px;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
   transition: transform 0.3s;
   border-radius: 9999px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(to right, #ffca8a, #f9f1e7); /* Gradient background */
+  background: linear-gradient(to right, #ffca8a, #f9f1e7);  
   text-align: center;
   text-decoration: none;
 }
 
 .gettingStartedButton:hover {
-  background: linear-gradient(to right, #f9f1e7, #f79c4d); /* Gradient background */
+  background: linear-gradient(to right, #f9f1e7, #f79c4d);  
   transform: scale(1.05);
 }
 
@@ -80,7 +80,7 @@
   font-size: 1.875rem;
   font-weight: 700;
   text-align: center;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
 }
 
 .featuresList {
@@ -96,19 +96,19 @@
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.2); /* Glass effect with transparency */
+  background-color: rgba(255, 255, 255, 0.2);  
 }
 
 .featureIcon {
   width: 24px;
   height: 24px;
   margin-right: 16px;
-  color: #3e3e3e; /* Darker icon color for contrast */
+  color: #3e3e3e;  
 }
 
 .featureText {
   font-size: 0.875rem;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
 }
 
 .scrollButtons {
@@ -125,16 +125,16 @@
   width: 100%;
   max-width: 400px;
   padding: 12px 24px;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e; 
   transition: transform 0.3s;
   border-radius: 9999px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(to right, #ffcf94, #f9f1e7); /* Gradient background */
+  background: linear-gradient(to right, #ffcf94, #f9f1e7);  
   text-align: center;
   text-decoration: none;
 }
 
 .scrollButton:hover {
-  background: linear-gradient(to right, #f9f1e7, #f79c4d); /* Gradient background */
+  background: linear-gradient(to right, #f9f1e7, #f79c4d); 
   transform: scale(1.05);
 }

@@ -6,14 +6,14 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to right, #f9f1e7, #f79c4d); /* Gradient background */
+  background: linear-gradient(to right, #f9f1e7, #f79c4d);  
   padding: 20px;
 }
 
 .title {
   margin-bottom: 1.5rem;
   font-size: 2rem;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
   font-weight: bold;
 }
 
@@ -22,8 +22,8 @@
   flex-direction: column;
   width: 100%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.3); /* Semi-transparent white */
-  backdrop-filter: blur(10px); /* Glass effect */
+  background: rgba(255, 255, 255, 0.3);  
+  backdrop-filter: blur(10px);  
   border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -38,7 +38,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
 }
 
 .inputField {
@@ -51,14 +51,14 @@
 }
 
 .inputField:focus {
-  border-color: #f79c4d; /* Accent color for focus */
+  border-color: #f79c4d;  
 }
 
 .submitButton {
   width: 100%;
   padding: 10px;
   margin-bottom: 1rem;
-  background-color: #f79c4d; /* Accent color */
+  background-color: #f79c4d;  
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -67,11 +67,11 @@
 }
 
 .submitButton:hover {
-  background-color: #e58e26; /* Slightly darker shade for hover */
+  background-color: #e58e26;  
 }
 
 .errorMessage {
-  color: #ff3838; /* Error color */
+  color: #ff3838; 
   margin-bottom: 1rem;
 }
 
@@ -82,16 +82,16 @@
 
 .signInText {
   font-size: 0.9rem;
-  color: #3e3e3e; /* Darker text color for contrast */
+  color: #3e3e3e;  
 }
 
 .signInLink {
-  color: #f79c4d; /* Accent color */
+  color: #f79c4d;  
   text-decoration: underline;
 }
 
 .signInLink:hover {
-  color: #e58e26; /* Slightly darker shade for hover */
+  color: #e58e26;  
 }
 
 .alternativeRegisterContainer {
@@ -118,21 +118,21 @@
 }
 
 .googleButton {
-  background-color: #ea4335; /* Google red */
+  background-color: #ea4335;  
   color: #fff;
 }
 
 .googleButton:hover {
-  background-color: #d93025; /* Slightly darker shade for hover */
+  background-color: #d93025; 
 }
 
 .appleButton {
-  background-color: #ffffff; /* Apple white */
-  color: #000000; /* Apple black text */
+  background-color: #ffffff;  
+  color: #000000;  
 }
 
 .appleButton:hover {
-  background-color: #f0f0f0; /* Slightly darker shade for hover */
+  background-color: #f0f0f0; 
 }
 
 .icon {

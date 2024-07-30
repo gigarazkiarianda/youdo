@@ -101,6 +101,10 @@ const Dashboard = ({ username }) => {
     handleEditToggle(id, type);
   };
 
+  const handleDeleteTask = (id) => {
+    console.log('Taks Deleted');
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -237,6 +241,7 @@ const Dashboard = ({ username }) => {
                     <li key={task.id} className={styles.taskItem}>
                       <div>
                         <span className={styles.taskTitle}>{task.title}</span>
+                        <br/>
                         <span className={styles.taskDate}>{task.date}</span>
                       </div>
                       <button 
@@ -244,7 +249,8 @@ const Dashboard = ({ username }) => {
                         className={styles.editButton}
                       >
                         {editTaskId === task.id ? 'Save' : 'Edit'}
-                      </button>
+                      </button> 
+                      <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
                       {editTaskId === task.id && (
                         <input
                           type="text"
@@ -287,6 +293,7 @@ const Dashboard = ({ username }) => {
                     <li key={project.id} className={styles.projectItem}>
                       <div>
                         <span className={styles.projectName}>{project.name}</span>
+                        <br/>
                         <span className={styles.projectStatus}>{project.status}</span>
                       </div>
                       <button 

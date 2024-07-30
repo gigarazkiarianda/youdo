@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/todos.module.css";
-import { FaSearch, FaChevronDown, FaBell, FaEnvelope } from "react-icons/fa";
+import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
+import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy';
 
 const Dashboard = ({ username }) => {
   const [task, setTask] = useState("");
@@ -11,8 +12,41 @@ const Dashboard = ({ username }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const tasksPerPage = 5; // Number of tasks to display per page
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState({ tasks: [], projects: [], followers: [] });
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isChatsOpen, setIsChatsOpen] = useState(false);
+  const tasksPerPage = 5;
   const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setSearchResults({ tasks: [], projects: [], followers: [] });
+      return;
+    }
+
+    const searchTasks = tasks.filter(task =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const searchProjects = projects.filter(project =>
+      project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const searchFollowers = followers.filter(follower =>
+      follower.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setSearchResults({
+      tasks: searchTasks,
+      projects: searchProjects,
+      followers: searchFollowers
+    });
+  }, [searchQuery]);
 
   // Handle logout
   const handleLogout = () => {
@@ -27,9 +61,9 @@ const Dashboard = ({ username }) => {
     navigate("/settings");
   };
 
-  const handlemyTodos = () => {
-    navigate("/todos")
-  }
+  const handleMyTodos = () => {
+    navigate("/todos");
+  };
 
   const handleAddTask = () => {
     if (task.trim() === "") {
@@ -74,7 +108,7 @@ const Dashboard = ({ username }) => {
     setError(null);
   };
 
-  // Pagination Logic
+  
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
   const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
@@ -88,57 +122,126 @@ const Dashboard = ({ username }) => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logoSearchContainer}>
-          <h1 className={styles.title}>YOUDO</h1>
-          <div
-            className={`${styles.searchContainer} ${
-              isSearchOpen ? styles.active : ""
-            }`}
-          >
-            {isSearchOpen && (
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder="Search..."
-              />
+    <header className={styles.header}>
+    <div className={styles.logoSearchContainer}>
+      <h1 className={styles.title}>YOUDO</h1>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setIsSearchOpen(true)}
+          onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
+        />
+        <FaSearch
+          className={styles.searchIcon}
+          size={20}
+        />
+        {isSearchOpen && (
+          <div className={styles.searchDropdown}>
+            {searchQuery.trim() === '' ? null : searchResults.tasks.length === 0 && searchResults.projects.length === 0 && searchResults.followers.length === 0 ? (
+              <div className={styles.noResultsMessage}>No results found</div>
+            ) : (
+              <>
+                {searchResults.tasks.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Tasks</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.tasks.map((task) => (
+                        <li key={task.id} className={styles.searchItem}>{task.title}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {searchResults.projects.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Projects</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.projects.map((project) => (
+                        <li key={project.id} className={styles.searchItem}>{project.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {searchResults.followers.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Followers</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.followers.map((follower) => (
+                        <li key={follower.id} className={styles.searchItem}>{follower.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
-            <FaSearch
-              className={styles.searchIcon}
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              size={20}
-            />
           </div>
+        )}
+      </div>
+    </div>
+    <div className={styles.dropdownContainer}>
+      <div className={styles.iconContainer}>
+        <FaBell 
+          className={styles.icon} 
+          onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+        />
+        <FaCommentDots 
+          className={styles.icon} 
+          onClick={() => setIsChatsOpen(!isChatsOpen)} 
+        />
+      </div>
+      <button
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className={styles.dropdownButton}
+      >
+        {username} <FaChevronDown />
+      </button>
+      {isDropdownOpen && (
+        <div className={styles.dropdownMenu}>
+          <div className={styles.dropdownItem} onClick={() => handleNavigation("/profile")}>Profile</div>
+          <div className={styles.dropdownItem} onClick={() => handleNavigation("/todos")}>MyTodo</div>
+          <div className={styles.dropdownItem} onClick={() => handleNavigation("/settings")}>Settings</div>
+          <div className={styles.dropdownItem} onClick={() => handleNavigation("/login")}>Logout</div>
         </div>
-        <div className={styles.dropdownContainer}>
-          <div className={styles.iconContainer}>
-            <FaBell className={styles.icon} />
-            <FaEnvelope className={styles.icon} />
-          </div>
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={styles.dropdownButton}
-          >
-            {username} <FaChevronDown />
-          </button>
-          {isDropdownOpen && (
-            <div className={styles.dropdownMenu}>
-              <div className={styles.dropdownItem} onClick={handleProfile}>
-                Profile
-              </div>
-              <div className={styles.dropdownItem} onClick={handlemyTodos}>
-                myTodo
-              </div>
-              <div className={styles.dropdownItem} onClick={handleSettings}>
-                Settings
-              </div>
-              <div className={styles.dropdownItem} onClick={handleLogout}>
-                Logout
-              </div>
-            </div>
-          )}
-        </div>
-      </header>
+      )}
+    </div>
+  </header>
+  {isNotificationsOpen && (
+    <div className={styles.notificationsDropdown}>
+      <h3>Notifications</h3>
+      <ul className={styles.notificationsList}>
+        {notifications.length === 0 ? (
+          <p className={styles.noNotificationsMessage}>No notifications</p>
+        ) : (
+          notifications.map(notification => (
+            <li key={notification.id} className={styles.notificationItem}>
+              {notification.message}
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  )}
+  {isChatsOpen && (
+    <div className={styles.chatsDropdown}>
+      <h3>Chats</h3>
+      <ul className={styles.chatsList}>
+        {chats.length === 0 ? (
+          <p className={styles.noChatsMessage}>No chats</p>
+        ) : (
+          chats.map(chat => (
+            <li key={chat.id} className={styles.chatItem}>
+              {chat.name}
+              <br/>
+              <button>read more</button>
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  )}
       <main className={styles.main}>
         <div className={styles.flexContainer}>
           <div className={`${styles.card} ${styles.cardTaskManager}`}>

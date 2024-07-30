@@ -59,3 +59,10 @@ export const chats = [
   { id: 9, name: "Fritzy JKT48", date: "2024-07-09", message: "Thanks for the update on the project status." },
   { id: 10, name: "Adel JKT48", date: "2024-07-10", message: "Let's discuss the next steps in our call." },
 ];
+
+export const profile = {
+  id: 1, 
+  username: "gigarazki",
+  password: "123",
+  email: "razkigiga@gmail.com"
+};
