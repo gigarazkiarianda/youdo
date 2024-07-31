@@ -9,7 +9,7 @@ import { tasks, projects, notifications, chats, profile } from '../data/Dashboar
 
 const ITEMS_PER_PAGE = 5;
 
-const Dashboard = ({ username }) => {
+const Projects = ({ username }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -227,8 +227,8 @@ const Dashboard = ({ username }) => {
   );
 };
 
-Dashboard.propTypes = {
+Projects.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default Dashboard;
+export default Projects;

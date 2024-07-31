@@ -1,44 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import styles from "../style/followers.module.css";
+import styles from "../style/settings.module.css"; // Ensure this path is correct
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
-import {
-  tasks,
-  projects,
-  followers,
-  notifications,
-  chats,
-} from "../data/DashboardDummy"; 
+import { tasks, projects, notifications, chats } from "../data/DashboardDummy";
+
 const ITEMS_PER_PAGE = 5;
 
-const Followers = ({ username }) => {
+const Settings = ({ username }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState({
     tasks: [],
     projects: [],
-    followers: [],
   });
-  const [currentPageFollowers, setCurrentPageFollowers] = useState(1);
-  const [currentPageTasks, setCurrentPageTasks] = useState(1); // Add this line
+  const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isChatsOpen, setIsChatsOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(
-    new Array(followers.length).fill(true)
-  ); 
+  const [language, setLanguage] = useState("English");
+  const [theme, setTheme] = useState("Light");
+  const [settings, setSettings] = useState({
+    notifications: true,
+    privacyMode: false,
+    autoUpdates: true,
+    darkMode: false,
+    syncSettings: false,
+    backupData: false,
+    displayDensity: "Comfortable",
+    emailAlerts: true,
+    customShortcuts: false,
+    accessibilityFeatures: false,
+  });
+
   const navigate = useNavigate();
 
-  // Handle navigation
   const handleNavigation = (path) => {
     navigate(path);
   };
 
-  
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setSearchResults({ tasks: [], projects: [], followers: [] });
+      setSearchResults({ tasks: [], projects: [] });
       return;
     }
 
@@ -50,40 +53,27 @@ const Followers = ({ username }) => {
       project.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const searchFollowers = followers.filter((follower) =>
-      follower.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
     setSearchResults({
       tasks: searchTasks,
       projects: searchProjects,
-      followers: searchFollowers,
     });
   }, [searchQuery]);
-
-  // Pagination handlers
-  const handlePageChangeFollowers = (page) => {
-    setCurrentPageFollowers(page);
-  };
 
   const handlePageChangeTasks = (page) => {
     setCurrentPageTasks(page);
   };
 
-  // Get paginated data
   const getPaginatedData = (data, currentPage) => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
     return data.slice(start, end);
   };
 
-  // Toggle follow/unfollow status
-  const handleFollowToggle = (index) => {
-    setIsFollowing((prev) => {
-      const updated = [...prev];
-      updated[index] = !updated[index];
-      return updated;
-    });
+  const toggleSetting = (setting) => {
+    setSettings((prev) => ({
+      ...prev,
+      [setting]: !prev[setting],
+    }));
   };
 
   return (
@@ -108,8 +98,7 @@ const Followers = ({ username }) => {
               <div className={styles.searchDropdown}>
                 {searchQuery.trim() === "" ? null : searchResults.tasks
                     .length === 0 &&
-                  searchResults.projects.length === 0 &&
-                  searchResults.followers.length === 0 ? (
+                  searchResults.projects.length === 0 ? (
                   <div className={styles.noResultsMessage}>
                     No results found
                   </div>
@@ -139,21 +128,6 @@ const Followers = ({ username }) => {
                         </ul>
                       </div>
                     )}
-                    {searchResults.followers.length > 0 && (
-                      <div className={styles.searchSection}>
-                        <h3>Followers</h3>
-                        <ul className={styles.searchList}>
-                          {searchResults.followers.map((follower) => (
-                            <li
-                              key={follower.id}
-                              className={styles.searchItem}
-                            >
-                              {follower.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                   </>
                 )}
               </div>
@@ -164,9 +138,7 @@ const Followers = ({ username }) => {
           <div className={styles.iconContainer}>
             <FaBell
               className={styles.icon}
-              onClick={() =>
-                setIsNotificationsOpen(!isNotificationsOpen)
-              }
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
             />
             <FaCommentDots
               className={styles.icon}
@@ -219,10 +191,7 @@ const Followers = ({ username }) => {
               </p>
             ) : (
               notifications.map((notification) => (
-                <li
-                  key={notification.id}
-                  className={styles.notificationItem}
-                >
+                <li key={notification.id} className={styles.notificationItem}>
                   {notification.message}
                 </li>
               ))
@@ -251,75 +220,138 @@ const Followers = ({ username }) => {
       <main className={styles.main}>
         <div className={styles.gridContainer}>
           <div className={styles.gridItem}>
-            {/* Followers Container */}
-            <div
-              className={`${styles.card} ${styles.cardFollowerManager}`}
-            >
-              <h2 className={styles.followersTitle}>Followers</h2>
-              <ul className={styles.followerList}>
-                {getPaginatedData(
-                  followers,
-                  currentPageFollowers
-                ).length === 0 ? (
-                  <p className={styles.noFollowersMessage}>
-                    No followers available
-                  </p>
-                ) : (
-                  getPaginatedData(followers, currentPageFollowers).map(
-                    (follower, index) => (
-                      <li
-                        key={follower.id}
-                        className={styles.followerItem}
-                      >
-                        <div>
-                          <span className={styles.followerName}>
-                            {follower.name}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() =>
-                            handleFollowToggle(index)
-                          }
-                          className={styles.followButton}
-                        >
-                          {isFollowing[index]
-                            ? "Unfollow"
-                            : "Follow"}
-                        </button>
-                      </li>
-                    )
-                  )
-                )}
-              </ul>
-              <div className={styles.pagination}>
-                <button
-                  disabled={currentPageFollowers === 1}
-                  onClick={() =>
-                    handlePageChangeFollowers(currentPageFollowers - 1)
-                  }
+            {/* Settings Container */}
+            <div className={`${styles.card} ${styles.cardSettingsManager}`}>
+              <h2 className={styles.settingsTitle}>Settings</h2>
+              <div className={styles.settingsSection}>
+                <h3>Language</h3>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className={styles.settingsDropdown}
                 >
-                  Previous
-                </button>
-                <span>{currentPageFollowers}</span>
-                <button
-                  disabled={
-                    getPaginatedData(
-                      followers,
-                      currentPageFollowers
-                    ).length < ITEMS_PER_PAGE
-                  }
-                  onClick={() =>
-                    handlePageChangeFollowers(currentPageFollowers + 1)
-                  }
-                >
-                  Next
-                </button>
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="Indonesia">Indonesia</option>
+                </select>
               </div>
+              <div className={styles.settingsSection}>
+                <h3>Display Theme</h3>
+                <select
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value)}
+                  className={styles.settingsDropdown}
+                >
+                  <option value="Light">Light</option>
+                  <option value="Dark">Dark</option>
+                </select>
+              </div>
+              <ul className={styles.settingsList}>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications}
+                      onChange={() => toggleSetting("notifications")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Enable Notifications
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.privacyMode}
+                      onChange={() => toggleSetting("privacyMode")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Privacy Mode
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.autoUpdates}
+                      onChange={() => toggleSetting("autoUpdates")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Automatic Updates
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.darkMode}
+                      onChange={() => toggleSetting("darkMode")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Dark Mode
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.syncSettings}
+                      onChange={() => toggleSetting("syncSettings")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Sync Settings
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.backupData}
+                      onChange={() => toggleSetting("backupData")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Backup Data
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.emailAlerts}
+                      onChange={() => toggleSetting("emailAlerts")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Email Alerts
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.customShortcuts}
+                      onChange={() => toggleSetting("customShortcuts")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Custom Shortcuts
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.accessibilityFeatures}
+                      onChange={() => toggleSetting("accessibilityFeatures")}
+                      className={styles.settingsCheckbox}
+                    />
+                    Accessibility Features
+                  </label>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className={styles.gridItem}>
-          </div>
+          <div className={styles.gridItem}></div>
         </div>
       </main>
       <footer className={styles.footer}>
@@ -329,8 +361,8 @@ const Followers = ({ username }) => {
   );
 };
 
-Followers.propTypes = {
+Settings.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default Followers;
+export default Settings;

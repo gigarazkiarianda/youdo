@@ -4,7 +4,7 @@ import styles from "../style/todos.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
 import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy';
 
-const Dashboard = ({ username }) => {
+const Todos = ({ username }) => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
@@ -318,4 +318,4 @@ const Dashboard = ({ username }) => {
   );
 };
 
-export default Dashboard;
+export default Todos;
