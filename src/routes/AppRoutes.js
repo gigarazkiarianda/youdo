@@ -6,6 +6,10 @@ import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard'; 
 import Todos from '../pages/todos';
 import Profile from '../pages/profile';
+import EditProfle from '../pages/editProfile';
+import Projects from '../pages/Projects';
+import Followers  from '../pages/Followers';
+import Following from '../pages/following';
 
 const AppRoutes = () => {
   return (
@@ -17,6 +21,10 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} /> 
         <Route path="/todos" element={<Todos/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/projects" element={<Projects/>}/>
+        <Route path="/edit-profile" element={<EditProfle/>}/>
+        <Route path="/followers" element={<Followers/>}/>
+        <Route path="/following" element={<Following/>}/>
       </Routes>
     </Router>
   );

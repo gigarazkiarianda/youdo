@@ -1,4 +1,4 @@
-// src/dummyData.js
+import photo from "../assets/zee.jpg"; // Import the image
 
 export const tasks = [
   { id: 1, title: "Design Homepage", date: "07/25/2024" },
@@ -27,7 +27,20 @@ export const projects = [
 ];
 
 export const followers = [
-  { id: 1, name: "Zee JKT48" },
+  { id: 1, name: "Giga Razki" },
+  { id: 2, name: "Freya JKT48" },
+  { id: 3, name: "Christy JKT48" },
+  { id: 4, name: "Gracia JKT48" },
+  { id: 5, name: "Trisha JKT48" },
+  { id: 6, name: "Oniel JKT48" },
+  { id: 7, name: "Indira JKT48" },
+  { id: 8, name: "Gita JKT48" },
+  { id: 9, name: "Fritzy JKT48" },
+  { id: 10, name: "Adel JKT48" },
+];
+
+export const following = [
+  { id: 1, name: "Giga Razki" },
   { id: 2, name: "Freya JKT48" },
   { id: 3, name: "Christy JKT48" },
   { id: 4, name: "Gracia JKT48" },
@@ -40,7 +53,7 @@ export const followers = [
 ];
 
 export const notifications = [
-  { id: 1, message: "Zee JKT48 followed you." },
+  { id: 1, message: "Giga Razki followed you." },
   { id: 2, message: "Freya JKT48 joined the group." },
   { id: 3, message: "Christy JKT48 liked your post." },
   { id: 4, message: "Gracia JKT48 commented on your photo." },
@@ -48,7 +61,7 @@ export const notifications = [
 ];
 
 export const chats = [
-  { id: 1, name: "Zee JKT48", date: "2024-07-01", message: "Hey! How's everything going?" },
+  { id: 1, name: "Giga Razki", date: "2024-07-01", message: "Hey! How's everything going?" },
   { id: 2, name: "Freya JKT48", date: "2024-07-02", message: "Just wanted to check in on the project progress." },
   { id: 3, name: "Christy JKT48", date: "2024-07-03", message: "Have you seen the latest design updates?" },
   { id: 4, name: "Gracia JKT48", date: "2024-07-04", message: "I'm excited about the upcoming release!" },
@@ -62,7 +75,9 @@ export const chats = [
 
 export const profile = {
   id: 1, 
-  username: "gigarazki",
+  username: "Aziziasadel",
   password: "123",
-  email: "razkigiga@gmail.com"
+  email: "aziziasadel@gmail.com",
+  deskripsi: "Si gadis tomboy yang semangatnya meletup - meletup ",
+  photo: photo,  
 };

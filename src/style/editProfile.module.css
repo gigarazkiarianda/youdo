@@ -253,9 +253,11 @@ html, body {
     margin-top: -50px;
 }
 
+
+
 .profilePhoto {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
 }
@@ -266,50 +268,28 @@ html, body {
     height: 100px; 
     object-fit: cover;
     border: 3px solid #ddd;
+    margin-bottom: 10px;
 }
 
 .profileInfo {
     text-align: center;
-}
-
-.profileStats {
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    gap: 30px; 
-    margin-bottom: 20px;
-    flex-wrap: wrap; 
-}
-
-.profileStat {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    gap: 10px; /* Space between input fields */
 }
 
-.profileStatCount {
-    font-size: 20px; 
-    font-weight: bold;
-    color: #333;
-}
-
-.profileStatLabel {
-    color: gray;
-    font-size: 14px; 
-}
-
-.profileUsername {
-    font-size: 22px; 
-    font-weight: bold;
+.inputField {
+    width: 100%;
+    padding: 10px;
     margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: rgba(51, 51, 51, 0.158);
 }
 
-.profileDescription {
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.editProfileButton {
+.saveChangesButton {
     background-color: #ff9900; 
     color: white;
     border: none;
@@ -317,6 +297,12 @@ html, body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    width: 100%; /* Full width */
+}
+
+.saveChangesButton:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
 }
 
 /* Specific Cards */

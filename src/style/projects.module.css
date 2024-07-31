@@ -245,88 +245,13 @@ html, body {
     flex-direction: column;
 }
 
-/* Profile Card */
-.cardProfile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: -50px;
-}
-
-.profilePhoto {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profileImage {
-    border-radius: 50%;
-    width: 100px; 
-    height: 100px; 
-    object-fit: cover;
-    border: 3px solid #ddd;
-}
-
-.profileInfo {
-    text-align: center;
-}
-
-.profileStats {
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    gap: 30px; 
-    margin-bottom: 20px;
-    flex-wrap: wrap; 
-}
-
-.profileStat {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-}
-
-.profileStatCount {
-    font-size: 20px; 
-    font-weight: bold;
-    color: #333;
-}
-
-.profileStatLabel {
-    color: gray;
-    font-size: 14px; 
-}
-
-.profileUsername {
-    font-size: 22px; 
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.profileDescription {
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.editProfileButton {
-    background-color: #ff9900; 
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
 
 /* Specific Cards */
-.cardTaskManager,
 .cardProjectManager {
     
 }
 
 /* Titles for Cards */
-.tasksTitle,
 .projectsTitle {
     margin-bottom: 15px;
     font-size: 18px;
@@ -335,7 +260,7 @@ html, body {
 }
 
 /* Lists */
-.taskList,
+
 .projectList {
     list-style: none;
     margin: 0;
@@ -343,7 +268,6 @@ html, body {
 }
 
 /* Task Item */
-.taskItem,
 .projectItem {
     display: flex;
     justify-content: space-between;
@@ -360,7 +284,7 @@ html, body {
 }
 
 /* Task Date and Project Status */
-.taskDate,
+
 .projectStatus {
     color: gray;
 }

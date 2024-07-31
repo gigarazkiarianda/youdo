@@ -124,7 +124,7 @@ const Dashboard = ({ username }) => {
     <div className={styles.container}>
     <header className={styles.header}>
     <div className={styles.logoSearchContainer}>
-      <h1 className={styles.title}>YOUDO</h1>
+      <h1 className={styles.title}><a href="/dashboard">YOUDO</a></h1>
       <div className={styles.searchContainer}>
         <input
           type="text"

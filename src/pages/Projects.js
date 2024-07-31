@@ -1,13 +1,15 @@
+// src/components/Dashboard.js
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import styles from "../style/profile.module.css";
+import styles from "../style/projects.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
 import { tasks, projects, notifications, chats, profile } from '../data/DashboardDummy'; // Import dummy data
 
 const ITEMS_PER_PAGE = 5;
 
-const Profile = ({ username }) => {
+const Dashboard = ({ username }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -188,68 +190,6 @@ const Profile = ({ username }) => {
       </header>
       <main className={styles.main}>
         <div className={styles.cardsContainer}>
-          <div className={styles.cardProfile}>
-            <div className={styles.card}>
-              <div className={styles.profilePhoto}>
-                <img src={profile.photo} alt="Profile" className={styles.profileImage} />
-              </div>
-              <div className={styles.profileInfo}>
-                <div className={styles.profileStats}>
-                  <div className={styles.profileStat}>
-                    <span className={styles.profileStatCount}>2M</span>
-                    <span className={styles.profileStatLabel}>
-                    <a href="/followers">Followers</a>
-                    </span>
-                    
-                  </div>
-                  <div className={styles.profileStat}>
-                    <span className={styles.profileStatCount}>180</span>
-                    <span className={styles.profileStatLabel}>
-                    <a href="/following">Following</a>
-                    </span>
-                    
-                  </div>
-                  <div className={styles.profileStat}>
-                    <span className={styles.profileStatCount}>{projects.length}</span>
-                    <span className={styles.profileStatLabel}>
-                    <a href="/projects">Projects</a>
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.profileUsername}>{profile.username}</div>
-                <div className={styles.profileDescription}>{profile.deskripsi}</div>
-              </div>
-              <button className={styles.editProfileButton}><a href="/edit-profile">Edit Profile</a></button>
-            </div>
-          </div>
-          <div className={styles.cardTaskManager}>
-            <div className={styles.card}>
-              <h2 className={styles.tasksTitle}>Task Manager</h2>
-              <ul className={styles.taskList}>
-                {getPaginatedData(tasks, currentPageTasks).map((task) => (
-                  <li key={task.id} className={styles.taskItem}>
-                    {task.title} - {task.date}
-                    <button onClick={() => handleEditTask(task)}>Edit</button>
-                  </li>
-                ))}
-              </ul>
-              <div className={styles.pagination}>
-                <button
-                  onClick={() => handlePageChangeTasks(currentPageTasks - 1)}
-                  disabled={currentPageTasks === 1}
-                >
-                  Previous
-                </button>
-                <span>Page {currentPageTasks}</span>
-                <button
-                  onClick={() => handlePageChangeTasks(currentPageTasks + 1)}
-                  disabled={currentPageTasks * ITEMS_PER_PAGE >= tasks.length}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
           <div className={styles.cardProjectManager}>
             <div className={styles.card}>
               <h2 className={styles.projectsTitle}>Project Manager</h2>
@@ -287,8 +227,8 @@ const Profile = ({ username }) => {
   );
 };
 
-Profile.propTypes = {
+Dashboard.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default Profile;
+export default Dashboard;
