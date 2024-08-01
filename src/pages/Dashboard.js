@@ -220,7 +220,7 @@ const Dashboard = ({ username }) => {
                 <li key={chat.id} className={styles.chatItem}>
                   {chat.name}
                   <br/>
-                  <button>read more</button>
+                   <button><a href={"/chat"}>read more</a></button>
                 </li>
               ))
             )}

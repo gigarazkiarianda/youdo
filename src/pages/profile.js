@@ -177,7 +177,12 @@ const Profile = ({ username }) => {
             <ul className={styles.chatsList}>
               {chats.length > 0 ? (
                 chats.map((chat) => (
-                  <li key={chat.id} className={styles.chatItem}>{chat.message}</li>
+                  <li key={chat.id} className={styles.chatItem}>
+                  {chat.name}
+                  <br/>
+                  {chat.message}
+                  <button><a href={"/chat"}>read more</a></button>
+                </li>
                 ))
               ) : (
                 <div className={styles.noChatsMessage}>No chats</div>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import styles from "../style/settings.module.css"; // Ensure this path is correct
+import styles from "../style/settings.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
 import { tasks, projects, notifications, chats } from "../data/DashboardDummy";
-
-const ITEMS_PER_PAGE = 5;
 
 const Settings = ({ username }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,10 +22,8 @@ const Settings = ({ username }) => {
     notifications: true,
     privacyMode: false,
     autoUpdates: true,
-    darkMode: false,
     syncSettings: false,
     backupData: false,
-    displayDensity: "Comfortable",
     emailAlerts: true,
     customShortcuts: false,
     accessibilityFeatures: false,
@@ -59,20 +55,20 @@ const Settings = ({ username }) => {
     });
   }, [searchQuery]);
 
-  const handlePageChangeTasks = (page) => {
-    setCurrentPageTasks(page);
+  useEffect(() => {
+    document.body.classList.toggle(styles.darkTheme, theme === "Dark");
+    document.body.classList.toggle(styles.lightTheme, theme === "Light");
+  }, [theme]);
+
+  const handleThemeChange = (event) => {
+    const selectedTheme = event.target.value;
+    setTheme(selectedTheme);
   };
 
-  const getPaginatedData = (data, currentPage) => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return data.slice(start, end);
-  };
-
-  const toggleSetting = (setting) => {
-    setSettings((prev) => ({
-      ...prev,
-      [setting]: !prev[setting],
+  const handleSettingChange = (setting) => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      [setting]: !prevSettings[setting],
     }));
   };
 
@@ -96,8 +92,7 @@ const Settings = ({ username }) => {
             <FaSearch className={styles.searchIcon} size={20} />
             {isSearchOpen && (
               <div className={styles.searchDropdown}>
-                {searchQuery.trim() === "" ? null : searchResults.tasks
-                    .length === 0 &&
+                {searchQuery.trim() === "" ? null : searchResults.tasks.length === 0 &&
                   searchResults.projects.length === 0 ? (
                   <div className={styles.noResultsMessage}>
                     No results found
@@ -206,11 +201,11 @@ const Settings = ({ username }) => {
             {chats.length === 0 ? (
               <p className={styles.noChatsMessage}>No chats</p>
             ) : (
-              chats.map((chat) => (
+              chats.map(chat => (
                 <li key={chat.id} className={styles.chatItem}>
                   {chat.name}
-                  <br />
-                  <button>read more</button>
+                  <br/>
+                   <button><a href={"/chat"}>read more</a></button>
                 </li>
               ))
             )}
@@ -220,7 +215,6 @@ const Settings = ({ username }) => {
       <main className={styles.main}>
         <div className={styles.gridContainer}>
           <div className={styles.gridItem}>
-            {/* Settings Container */}
             <div className={`${styles.card} ${styles.cardSettingsManager}`}>
               <h2 className={styles.settingsTitle}>Settings</h2>
               <div className={styles.settingsSection}>
@@ -240,20 +234,21 @@ const Settings = ({ username }) => {
                 <h3>Display Theme</h3>
                 <select
                   value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
+                  onChange={handleThemeChange}
                   className={styles.settingsDropdown}
                 >
                   <option value="Light">Light</option>
                   <option value="Dark">Dark</option>
                 </select>
               </div>
+              {/* Settings List */}
               <ul className={styles.settingsList}>
                 <li>
                   <label>
                     <input
                       type="checkbox"
                       checked={settings.notifications}
-                      onChange={() => toggleSetting("notifications")}
+                      onChange={() => handleSettingChange("notifications")}
                       className={styles.settingsCheckbox}
                     />
                     Enable Notifications
@@ -264,7 +259,7 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.privacyMode}
-                      onChange={() => toggleSetting("privacyMode")}
+                      onChange={() => handleSettingChange("privacyMode")}
                       className={styles.settingsCheckbox}
                     />
                     Privacy Mode
@@ -275,7 +270,7 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.autoUpdates}
-                      onChange={() => toggleSetting("autoUpdates")}
+                      onChange={() => handleSettingChange("autoUpdates")}
                       className={styles.settingsCheckbox}
                     />
                     Automatic Updates
@@ -285,19 +280,8 @@ const Settings = ({ username }) => {
                   <label>
                     <input
                       type="checkbox"
-                      checked={settings.darkMode}
-                      onChange={() => toggleSetting("darkMode")}
-                      className={styles.settingsCheckbox}
-                    />
-                    Dark Mode
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input
-                      type="checkbox"
                       checked={settings.syncSettings}
-                      onChange={() => toggleSetting("syncSettings")}
+                      onChange={() => handleSettingChange("syncSettings")}
                       className={styles.settingsCheckbox}
                     />
                     Sync Settings
@@ -308,7 +292,7 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.backupData}
-                      onChange={() => toggleSetting("backupData")}
+                      onChange={() => handleSettingChange("backupData")}
                       className={styles.settingsCheckbox}
                     />
                     Backup Data
@@ -319,7 +303,7 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.emailAlerts}
-                      onChange={() => toggleSetting("emailAlerts")}
+                      onChange={() => handleSettingChange("emailAlerts")}
                       className={styles.settingsCheckbox}
                     />
                     Email Alerts
@@ -330,7 +314,7 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.customShortcuts}
-                      onChange={() => toggleSetting("customShortcuts")}
+                      onChange={() => handleSettingChange("customShortcuts")}
                       className={styles.settingsCheckbox}
                     />
                     Custom Shortcuts
@@ -341,7 +325,9 @@ const Settings = ({ username }) => {
                     <input
                       type="checkbox"
                       checked={settings.accessibilityFeatures}
-                      onChange={() => toggleSetting("accessibilityFeatures")}
+                      onChange={() =>
+                        handleSettingChange("accessibilityFeatures")
+                      }
                       className={styles.settingsCheckbox}
                     />
                     Accessibility Features
@@ -350,7 +336,6 @@ const Settings = ({ username }) => {
               </ul>
             </div>
           </div>
-
           <div className={styles.gridItem}></div>
         </div>
       </main>

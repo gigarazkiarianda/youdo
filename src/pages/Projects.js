@@ -176,13 +176,18 @@ const Projects = ({ username }) => {
         )}
         {isChatsOpen && (
           <div className={styles.chatsDropdown}>
+            <h3>Chats</h3>
             <ul className={styles.chatsList}>
-              {chats.length > 0 ? (
-                chats.map((chat) => (
-                  <li key={chat.id} className={styles.chatItem}>{chat.message}</li>
-                ))
+              {chats.length === 0 ? (
+                <p className={styles.noChatsMessage}>No chats</p>
               ) : (
-                <div className={styles.noChatsMessage}>No chats</div>
+                chats.map(chat => (
+                  <li key={chat.id} className={styles.chatItem}>
+                    {chat.name}
+                    <br/>
+                     <button><a href={"/chat"}>read more</a></button>
+                  </li>
+                ))
               )}
             </ul>
           </div>

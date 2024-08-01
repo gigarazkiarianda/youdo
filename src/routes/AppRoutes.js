@@ -11,6 +11,7 @@ import Projects from '../pages/Projects';
 import Followers  from '../pages/Followers';
 import Following from '../pages/following';
 import Settings from '../pages/settings';
+import Chat from '../pages/chat';
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="/followers" element={<Followers/>}/>
         <Route path="/following" element={<Following/>}/>
         <Route path="/settings" element={<Settings/>}/>
+        <Route path="/chat" element={<Chat/>}/>
       </Routes>
     </Router>
   );

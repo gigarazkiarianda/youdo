@@ -1,0 +1,522 @@
+/* General container */
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    position: relative; /* Ensure proper stacking and alignment */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #ffcf94; /* Updated color */
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+/* Sidebar toggle button */
+.sidebarToggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #ffcf94;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1100; /* Above sidebar */
+}
+
+/* Sidebar open */
+.sidebar.open {
+    transform: translateX(0);
+}
+
+/* Sidebar closed */
+.sidebar.closed {
+    transform: translateX(-100%);
+}
+
+/* Sidebar title */
+.sidebar .title a {
+    text-decoration: none;
+    color: #3e3e3e; /* Updated color */
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Sidebar content */
+.sidebarContent {
+    margin-top: 20px;
+}
+
+.sidebarSection {
+    margin-bottom: 20px;
+}
+
+.sidebarSection h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #3e3e3e; /* Updated color */
+}
+
+.sidebarSection ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebarSection ul li {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #333; /* Updated color */
+}
+
+.sidebarSection ul li:hover {
+    background-color: #f9b25d; /* Updated color */
+}
+
+/* Main content */
+.mainContent {
+    margin-left: 250px;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    background-color: #f9f1e7; /* Updated color */
+    transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #ffcf94; /* Updated color */
+    position: fixed;
+    top: 0;
+    left: 250px; /* Align with the main content margin-left */
+    width: calc(100% - 250px); /* Full width minus sidebar width */
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+}
+
+/* Header elements */
+.headerLeft {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.headerTitle {
+    font-size: 24px;
+    color: #3e3e3e; /* Updated color */
+}
+
+/* Search container */
+.searchContainer {
+    position: relative;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.searchIcon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #333; /* Updated color */
+}
+
+/* Dropdown styles */
+.searchDropdown,
+.dropdownMenu,
+.notificationsDropdown,
+.chatsDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.dropdownMenu,
+.notificationsDropdown,
+.chatsDropdown {
+    background-color: #ffcf94; /* Updated color */
+}
+
+.searchSection,
+.notificationsDropdown h3,
+.chatsDropdown h3 {
+    padding: 10px;
+    color: #3e3e3e; /* Updated color */
+}
+
+.notificationsList,
+.chatsList,
+.searchList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.searchItem,
+.notificationItem,
+.chatItem {
+    padding: 10px;
+    color: #333; /* Updated color */
+}
+
+.searchItem:hover,
+.dropdownItem:hover,
+.notificationItem:hover,
+.chatItem:hover {
+    background-color: #f9b25d; /* Updated color */
+}
+
+.dropdownItem {
+    padding: 10px;
+    cursor: pointer;
+    color: #333; /* Updated color */
+}
+
+/* Icons */
+.iconContainer {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin: 0 10px;
+    cursor: pointer;
+    color: #3e3e3e; /* Updated color */
+}
+
+/* Settings content */
+.settingsContent {
+    margin-top: 20px;
+}
+
+.settingsContent h2 {
+    margin-bottom: 20px;
+    color: #3e3e3e; /* Updated color */
+}
+
+.setting {
+    margin-bottom: 20px;
+}
+
+.setting label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333; /* Updated color */
+}
+
+.setting label input {
+    margin-right: 10px;
+}
+
+/* Profile Section */
+.profileSection {
+    padding: 20px;
+    background-color: #f9f1e7;
+    border-bottom: 1px solid #ddd;
+    margin-top: 50px;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profilePicture {
+    width: 60px; /* Adjust size for smaller screens */
+    height: 60px;
+    border-radius: 50%;
+}
+
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.profileInfo h2 {
+    font-size: 20px;
+}
+
+.profileInfo p {
+    font-size: 14px;
+}
+
+/* Chat Messages */
+.myMessage,
+.theirMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 70%;
+}
+
+.myMessage {
+    background-color: #e1ffc7;
+    align-self: flex-end;
+}
+
+.theirMessage {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+}
+
+/* Message input container */
+.messageInputContainer {
+    display: flex;
+    position: fixed;
+    bottom: 50px; /* Position above footer */
+    left: 250px; /* Align with main content */
+    width: calc(100% - 250px); /* Full width minus sidebar */
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.messageInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.sendButton {
+    margin-left: 10px;
+    background-color: #ffcf94;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    left: 250px; /* Align with the main content margin-left */
+    width: calc(100% - 250px); /* Full width minus sidebar width */
+    background-color: #ffcf94; /* Updated color */
+    z-index: 10;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-250px);
+        z-index: 2000;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .mainContent {
+        margin-left: 0;
+    }
+
+    .header {
+        left: 0; /* Full width on smaller screens */
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .headerLeft,
+    .headerRight {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .headerRight {
+        margin-top: 10px;
+    }
+
+    .greetingPopup {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        max-width: 90%;
+        text-align: center;
+    }
+
+    .greetingPopup p {
+        font-size: 18px;
+    }
+
+    .footer {
+        left: 0; /* Full width on smaller screens */
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar.closed {
+        transform: translateX(-200px); /* Width of the sidebar */
+    }
+
+    .sidebarToggle {
+        display: block;
+    }
+
+    .mainContent {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .header {
+        left: 0; /* Full width on smaller screens */
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .searchInput {
+        font-size: 14px;
+    }
+
+    .searchIcon {
+        right: 5px;
+    }
+
+    .notificationsDropdown,
+    .chatsDropdown {
+        width: calc(100% - 20px);
+        right: 10px;
+    }
+
+    .profilePicture {
+        width: 50px;
+        height: 50px;
+    }
+
+    .profileInfo h2 {
+        font-size: 18px;
+    }
+
+    .profileInfo p {
+        font-size: 12px;
+    }
+
+    .greetingPopup {
+        max-width: 80%;
+    }
+
+    .greetingPopup p {
+        font-size: 16px;
+    }
+
+    .footer {
+        left: 0; /* Full width on smaller screens */
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 150px;
+        padding: 5px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar.closed {
+        transform: translateX(-150px); /* Width of the sidebar */
+    }
+
+    .sidebarToggle {
+        left: 10px;
+        padding: 5px;
+    }
+
+    .sidebar .title a {
+        font-size: 20px;
+    }
+
+    .searchInput {
+        font-size: 12px;
+    }
+
+    .searchIcon {
+        right: 2px;
+    }
+
+    .profilePicture {
+        width: 40px;
+        height: 40px;
+    }
+
+    .profileInfo h2 {
+        font-size: 16px;
+    }
+
+    .profileInfo p {
+        font-size: 10px;
+    }
+
+    .greetingPopup {
+        max-width: 90%;
+    }
+
+    .greetingPopup p {
+        font-size: 14px;
+    }
+
+    .footer {
+        padding: 5px;
+        left: 0; /* Full width on smaller screens */
+        width: 100%; /* Full width on smaller screens */
+    }
+}

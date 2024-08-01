@@ -225,18 +225,18 @@ const Following = ({ username }) => {
           </ul>
         </div>
       )}
-      {isChatsOpen && (
+     {isChatsOpen && (
         <div className={styles.chatsDropdown}>
           <h3>Chats</h3>
           <ul className={styles.chatsList}>
             {chats.length === 0 ? (
               <p className={styles.noChatsMessage}>No chats</p>
             ) : (
-              chats.map((chat) => (
+              chats.map(chat => (
                 <li key={chat.id} className={styles.chatItem}>
                   {chat.name}
-                  <br />
-                  <button>read more</button>
+                  <br/>
+                   <button><a href={"/chat"}>read more</a></button>
                 </li>
               ))
             )}
