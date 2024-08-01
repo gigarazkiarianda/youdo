@@ -1,13 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/chat.module.css"; // Ensure this path is correct
-import { FaSearch, FaChevronDown, FaBell, FaEnvelope, FaPaperPlane } from "react-icons/fa";
-import { tasks, projects, notifications, chats, followers, profile } from "../data/DashboardDummy";
+import {
+  FaSearch,
+  FaChevronDown,
+  FaBell,
+  FaEnvelope,
+  FaPaperPlane,
+} from "react-icons/fa";
+import {
+  tasks,
+  projects,
+  notifications,
+  chats,
+  followers,
+  profile,
+} from "../data/DashboardDummy";
 
 const ITEMS_PER_PAGE = 5;
 
-const ChatRoom = ({ username }) => {
+const ChatRoom = () => {
+  const { chatId } = useParams(); // Get chat ID from URL
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,16 +34,30 @@ const ChatRoom = ({ username }) => {
   const [chatMessages, setChatMessages] = useState([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isChatsOpen, setIsChatsOpen] = useState(false);
+  const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
 
   const navigate = useNavigate();
   const messageEndRef = useRef(null);
 
-  // Assume profile information is stored in the `profile` object
-  const userProfile = followers.find((follower) => follower.username === username) || profile;
+  useEffect(() => {
+    const chat = chats.find((chat) => chat.id === parseInt(chatId, 10));
+    setSelectedChat(chat);
+  }, [chatId]);
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  useEffect(() => {
+    if (selectedChat) {
+      setChatMessages([
+        {
+          id: 1,
+          user: "System",
+          text: `You are now chatting with ${selectedChat.name}.`,
+        },
+        { id: 2, user: selectedChat.name, text: selectedChat.message },
+      ]);
+    } else {
+      setChatMessages([]); // Reset messages if no chat is selected
+    }
+  }, [selectedChat]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -45,7 +73,7 @@ const ChatRoom = ({ username }) => {
       project.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const searchChats = chats.filter((chat) => 
+    const searchChats = chats.filter((chat) =>
       chat.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -64,7 +92,7 @@ const ChatRoom = ({ username }) => {
     if (message.trim()) {
       setChatMessages((prevMessages) => [
         ...prevMessages,
-        { id: prevMessages.length + 1, user: username, text: message },
+        { id: prevMessages.length + 1, user: "You", text: message },
       ]);
       setMessage("");
     }
@@ -74,6 +102,10 @@ const ChatRoom = ({ username }) => {
     if (e.key === "Enter") {
       handleSendMessage();
     }
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   return (
@@ -87,7 +119,13 @@ const ChatRoom = ({ username }) => {
             <h2>Chats</h2>
             <ul>
               {chats.map((chat) => (
-                <li key={chat.id} onClick={() => handleNavigation(`/chat/${chat.id}`)}>
+                <li
+                  key={chat.id}
+                  onClick={() => navigate(`/chat/${chat.id}`)}
+                  className={
+                    chat.id === parseInt(chatId, 10) ? styles.activeChat : ""
+                  }
+                >
                   {chat.name}
                 </li>
               ))}
@@ -97,7 +135,10 @@ const ChatRoom = ({ username }) => {
             <h2>Projects</h2>
             <ul>
               {projects.map((project) => (
-                <li key={project.id} onClick={() => handleNavigation(`/project/${project.id}`)}>
+                <li
+                  key={project.id}
+                  onClick={() => handleNavigation(`/project/${project.id}`)}
+                >
                   {project.name}
                 </li>
               ))}
@@ -120,9 +161,8 @@ const ChatRoom = ({ username }) => {
             <FaSearch className={styles.searchIcon} size={20} />
             {isSearchOpen && (
               <div className={styles.searchDropdown}>
-                {searchQuery.trim() === "" ? null : searchResults.tasks.length === 0 &&
-                  searchResults.projects.length === 0 &&
-                  searchResults.chats.length === 0 ? (
+                {searchQuery.trim() === "" ? null : searchResults.tasks
+                    .length === 0 && searchResults.projects.length === 0 ? (
                   <div className={styles.noResultsMessage}>
                     No results found
                   </div>
@@ -182,7 +222,7 @@ const ChatRoom = ({ username }) => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className={styles.dropdownButton}
             >
-              <FaChevronDown />
+            <FaChevronDown />
             </button>
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
@@ -215,26 +255,54 @@ const ChatRoom = ({ username }) => {
           </div>
         </header>
         <section className={styles.profileSection}>
-          {/* Add any profile-specific content here */}
+          <div className={styles.profileHeader}>
+            <img
+              src={profile.photo} // Use a default image if profile photo is not found
+              alt="Profile"
+              className={styles.profilePicture}
+            />
+            <div className={styles.profileInfo}>
+              <h2>{selectedChat ? selectedChat.name : "Profile"}</h2>
+              <p>Online</p>
+            </div>
+          </div>
         </section>
         <div className={styles.chatRoom}>
-          <div className={styles.chatMessages}>
-            {chatMessages.length === 0 ? (
-              <div className={styles.noChatMessage}>
-                No chat selected
+          {selectedChat === null ? (
+            <div className={styles.unavailableMessage}>
+              <h2>Chat Unavailable</h2>
+              <p>Please select a chat from the sidebar.</p>
+            </div>
+          ) : (
+            <>
+              <div className={styles.chatMessages}>
+                {chatMessages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={
+                      msg.user === "You" ? styles.myMessage : styles.theirMessage
+                    }
+                  >
+                    <p>{msg.text}</p>
+                  </div>
+                ))}
+                <div ref={messageEndRef} />
               </div>
-            ) : (
-              chatMessages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={msg.user === username ? styles.myMessage : styles.theirMessage}
-                >
-                  <p>{msg.text}</p>
-                </div>
-              ))
-            )}
-            <div ref={messageEndRef} />
-          </div>
+              <div className={styles.messageInputContainer}>
+                <input
+                  type="text"
+                  className={styles.messageInput}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type a message..."
+                />
+                <button className={styles.sendButton} onClick={handleSendMessage}>
+                  <FaPaperPlane />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </main>
       <footer className={styles.footer}>
@@ -245,7 +313,7 @@ const ChatRoom = ({ username }) => {
 };
 
 ChatRoom.propTypes = {
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
 };
 
 export default ChatRoom;

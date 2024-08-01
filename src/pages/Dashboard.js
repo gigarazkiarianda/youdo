@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/dashboard.module.css";
-import { FaSearch, FaChevronDown, FaBell, FaEnvelope, FaCommentDots } from "react-icons/fa";
+import { FaSearch, FaChevronDown, FaBell, FaEnvelope } from "react-icons/fa";
 import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy'; // Import dummy data
 
 const ITEMS_PER_PAGE = 5;
@@ -102,7 +102,7 @@ const Dashboard = ({ username }) => {
   };
 
   const handleDeleteTask = (id) => {
-    console.log('Taks Deleted');
+    console.log('Task Deleted');
   }
 
   return (
@@ -172,7 +172,7 @@ const Dashboard = ({ username }) => {
               className={styles.icon} 
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
             />
-            <FaCommentDots 
+            <FaEnvelope
               className={styles.icon} 
               onClick={() => setIsChatsOpen(!isChatsOpen)} 
             />
@@ -220,7 +220,7 @@ const Dashboard = ({ username }) => {
                 <li key={chat.id} className={styles.chatItem}>
                   {chat.name}
                   <br/>
-                   <button><a href={"/chat"}>read more</a></button>
+                  <button><a href={"/chat"}>Read more</a></button>
                 </li>
               ))
             )}
@@ -241,16 +241,23 @@ const Dashboard = ({ username }) => {
                     <li key={task.id} className={styles.taskItem}>
                       <div>
                         <span className={styles.taskTitle}>{task.title}</span>
-                        <br/>
+                        <br />
                         <span className={styles.taskDate}>{task.date}</span>
                       </div>
-                      <button 
-                        onClick={() => handleEditToggle(task.id, 'task')}
-                        className={styles.editButton}
-                      >
-                        {editTaskId === task.id ? 'Save' : 'Edit'}
-                      </button> 
-                      <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                      <div className={styles.cardActions}>
+                        <button
+                          onClick={() => handleEditToggle(task.id, 'task')}
+                          className={styles.editButton}
+                        >
+                          {editTaskId === task.id ? 'Save' : 'Edit'}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTask(task.id)}
+                          className={styles.deleteButton}
+                        >
+                          Delete
+                        </button>
+                      </div>
                       {editTaskId === task.id && (
                         <input
                           type="text"
@@ -265,7 +272,7 @@ const Dashboard = ({ username }) => {
                 )}
               </ul>
               <div className={styles.pagination}>
-                <button 
+                <button
                   disabled={currentPageTasks === 1}
                   onClick={() => handlePageChangeTasks(currentPageTasks - 1)}
                 >
@@ -281,6 +288,7 @@ const Dashboard = ({ username }) => {
               </div>
             </div>
           </div>
+
           <div className={styles.gridItem}>
             {/* Projects Container */}
             <div className={`${styles.card} ${styles.cardProjectManager}`}>
@@ -293,15 +301,17 @@ const Dashboard = ({ username }) => {
                     <li key={project.id} className={styles.projectItem}>
                       <div>
                         <span className={styles.projectName}>{project.name}</span>
-                        <br/>
+                        <br />
                         <span className={styles.projectStatus}>{project.status}</span>
                       </div>
-                      <button 
-                        onClick={() => handleEditToggle(project.id, 'project')}
-                        className={styles.editButton}
-                      >
-                        {editProjectId === project.id ? 'Save' : 'Edit'}
-                      </button>
+                      <div className={styles.cardActions}>
+                        <button
+                          onClick={() => handleEditToggle(project.id, 'project')}
+                          className={styles.editButton}
+                        >
+                          {editProjectId === project.id ? 'Save' : 'Edit'}
+                        </button>
+                      </div>
                       {editProjectId === project.id && (
                         <input
                           type="text"
@@ -316,7 +326,7 @@ const Dashboard = ({ username }) => {
                 )}
               </ul>
               <div className={styles.pagination}>
-                <button 
+                <button
                   disabled={currentPageProjects === 1}
                   onClick={() => handlePageChangeProjects(currentPageProjects - 1)}
                 >
@@ -332,6 +342,7 @@ const Dashboard = ({ username }) => {
               </div>
             </div>
           </div>
+
           <div className={styles.gridItem}>
             {/* Followers Container */}
             <div className={`${styles.card} ${styles.cardFollowerManager}`}>
@@ -345,18 +356,20 @@ const Dashboard = ({ username }) => {
                       <div>
                         <span className={styles.followerName}>{follower.name}</span>
                       </div>
-                      <button 
-                        onClick={() => handleFollowToggle(index)}
-                        className={styles.followButton}
-                      >
-                        {isFollowing[index] ? 'Unfollow' : 'Follow'}
-                      </button>
+                      <div className={styles.cardActions}>
+                        <button
+                          onClick={() => handleFollowToggle(index)}
+                          className={styles.followButton}
+                        >
+                          {isFollowing[index] ? 'Unfollow' : 'Follow'}
+                        </button>
+                      </div>
                     </li>
                   ))
                 )}
               </ul>
               <div className={styles.pagination}>
-                <button 
+                <button
                   disabled={currentPageFollowers === 1}
                   onClick={() => handlePageChangeFollowers(currentPageFollowers - 1)}
                 >
@@ -372,6 +385,7 @@ const Dashboard = ({ username }) => {
               </div>
             </div>
           </div>
+
           <div className={styles.gridItem}>
             {/* Chats Container */}
             <div className={`${styles.card} ${styles.cardChatManager}`}>
@@ -384,17 +398,17 @@ const Dashboard = ({ username }) => {
                     <li key={chat.id} className={styles.chatItem}>
                       <div>
                         <span className={styles.chatName}>{chat.name}</span>
-                        <br/>
+                        <br />
                         <span className={styles.chatLastMessage}>{chat.message}</span>
-                        <br/>
-                        <button>Read more</button>
+                        <br />
+                        <button><a href={"/chat"} className={styles.readMore}>Read more</a></button>
                       </div>
                     </li>
                   ))
                 )}
               </ul>
               <div className={styles.pagination}>
-                <button 
+                <button
                   disabled={currentPageChats === 1}
                   onClick={() => handlePageChangeChats(currentPageChats - 1)}
                 >
@@ -412,7 +426,7 @@ const Dashboard = ({ username }) => {
           </div>
         </div>
       </main>
-       <footer className={styles.footer}>
+      <footer className={styles.footer}>
       &copy; 2024 YOUDO. All rights reserved.
     </footer>
     </div>

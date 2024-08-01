@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/editProfile.module.css";
-import { FaChevronDown, FaBell, FaCommentDots, FaSearch } from "react-icons/fa";
+import { FaChevronDown, FaBell, FaEnvelope, FaSearch } from "react-icons/fa";
 import { notifications, chats, profile } from "../data/DashboardDummy"; // Import dummy data
 
 const EditProfile = () => {
@@ -125,7 +125,7 @@ const EditProfile = () => {
           className={styles.icon} 
           onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
         />
-        <FaCommentDots
+        <FaEnvelope
           className={styles.icon}
           onClick={() => setIsChatsOpen(!isChatsOpen)}
         />
