@@ -16,20 +16,20 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true, // You can set it to false if you want to make it mandatory
+        allowNull: true, 
       },
       category: {
         type: Sequelize.STRING,
-        allowNull: true, // You can set it to false if you want to make it mandatory
+        allowNull: true, 
       },
       deadline: {
         type: Sequelize.DATE,
-        allowNull: true, // You can set it to false if you want to make it mandatory
+        allowNull: true, 
       },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'pending', // Default status can be set to 'pending', 'in-progress', etc.
+        defaultValue: 'pending', 
       },
       userId: {
         type: Sequelize.INTEGER,
