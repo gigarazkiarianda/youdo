@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/todos.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
-import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy';
+import { getAllTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
+import { notifications, chats } from '../data/DashboardDummy';
 
 const Todos = ({ username }) => {
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState({
+    title: "",
+    description: "",
+    category: "",
+    deadline: "",
+    status: "pending"
+  });
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -13,19 +20,21 @@ const Todos = ({ username }) => {
   const [isEditing, setIsEditing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState({ tasks: [], projects: [], followers: [] });
+  const [searchResults, setSearchResults] = useState([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isChatsOpen, setIsChatsOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const tasksPerPage = 5;
   const navigate = useNavigate();
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
-      setSearchResults({ tasks: [], projects: [], followers: [] });
+      setSearchResults([]);
       return;
     }
 
@@ -33,82 +42,98 @@ const Todos = ({ username }) => {
       task.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const searchProjects = projects.filter(project =>
-      project.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    setSearchResults(searchTasks);
+  }, [searchQuery, tasks]);
 
-    const searchFollowers = followers.filter(follower =>
-      follower.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    setSearchResults({
-      tasks: searchTasks,
-      projects: searchProjects,
-      followers: searchFollowers
-    });
-  }, [searchQuery]);
-
-  // Handle logout
-  const handleLogout = () => {
-    navigate("/login");
+  const fetchTodos = async () => {
+    try {
+      const data = await getAllTodos();
+      setTasks(data);
+    } catch (error) {
+      console.error('Failed to fetch todos:', error);
+    }
   };
 
-  const handleProfile = () => {
-    navigate("/profile");
-  };
-
-  const handleSettings = () => {
-    navigate("/settings");
-  };
-
-  const handleMyTodos = () => {
-    navigate("/todos");
-  };
-
-  const handleAddTask = () => {
-    if (task.trim() === "") {
-      setError("Task cannot be empty");
+  const handleAddTask = async () => {
+    if (task.title.trim() === "") {
+      setError("Title cannot be empty");
       return;
     }
 
     const newTask = {
-      id: Date.now(),
-      title: task,
-      date: new Date().toLocaleDateString(),
+      ...task,
+      UserId: 2 // Replace with actual user ID from auth context
     };
 
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-    setTask("");
-    setError(null);
-  };
-
-  const handleDeleteTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  };
-
-  const handleEditTask = (id) => {
-    const taskToEdit = tasks.find((task) => task.id === id);
-    if (taskToEdit) {
-      setTask(taskToEdit.title);
-      setIsEditing(id);
+    try {
+      const createdTask = await createTodo(newTask);
+      setTasks((prevTasks) => [...prevTasks, createdTask]);
+      setTask({
+        title: "",
+        description: "",
+        category: "",
+        deadline: "",
+        status: "pending"
+      });
+      setError(null);
+    } catch (error) {
+      setError("Failed to add task");
     }
   };
 
-  const handleSaveTask = () => {
-    if (task.trim() === "") {
-      setError("Task cannot be empty");
+  const handleDeleteTask = async (id) => {
+    try {
+      await deleteTodo(id);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      handleClosePopup(); // Close popup after delete
+    } catch (error) {
+      console.error(`Failed to delete task with id ${id}:`, error);
+    }
+  };
+
+  const handleEditTask = async () => {
+    if (task.title.trim() === "") {
+      setError("Title cannot be empty");
       return;
     }
 
-    setTasks((prevTasks) =>
-      prevTasks.map((t) => (t.id === isEditing ? { ...t, title: task } : t))
-    );
-    setTask("");
-    setIsEditing(null);
-    setError(null);
+    try {
+      await updateTodo(isEditing, task);
+      setTasks((prevTasks) =>
+        prevTasks.map((t) => (t.id === isEditing ? { ...t, ...task } : t))
+      );
+      setTask({
+        title: "",
+        description: "",
+        category: "",
+        deadline: "",
+        status: "pending"
+      });
+      setIsEditing(null);
+      setError(null);
+    } catch (error) {
+      setError("Failed to save task");
+    }
   };
 
-  
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedTask(null);
+    setTask({
+      title: "",
+      description: "",
+      category: "",
+      deadline: "",
+      status: "pending"
+    });
+    setIsEditing(null);
+  };
+
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
   const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
@@ -122,109 +147,82 @@ const Todos = ({ username }) => {
 
   return (
     <div className={styles.container}>
-    <header className={styles.header}>
-    <div className={styles.logoSearchContainer}>
-      <h1 className={styles.title}><a href="/dashboard">YOUDO</a></h1>
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onFocus={() => setIsSearchOpen(true)}
-          onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
-        />
-        <FaSearch
-          className={styles.searchIcon}
-          size={20}
-        />
-        {isSearchOpen && (
-          <div className={styles.searchDropdown}>
-            {searchQuery.trim() === '' ? null : searchResults.tasks.length === 0 && searchResults.projects.length === 0 && searchResults.followers.length === 0 ? (
-              <div className={styles.noResultsMessage}>No results found</div>
-            ) : (
-              <>
-                {searchResults.tasks.length > 0 && (
+      <header className={styles.header}>
+        <div className={styles.logoSearchContainer}>
+          <h1 className={styles.title}><a href="/dashboard">YOUDO</a></h1>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchOpen(true)}
+              onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
+            />
+            <FaSearch className={styles.searchIcon} size={20} />
+            {isSearchOpen && (
+              <div className={styles.searchDropdown}>
+                {searchQuery.trim() === '' ? null : searchResults.length === 0 ? (
+                  <div className={styles.noResultsMessage}>No results found</div>
+                ) : (
                   <div className={styles.searchSection}>
                     <h3>Tasks</h3>
                     <ul className={styles.searchList}>
-                      {searchResults.tasks.map((task) => (
+                      {searchResults.map((task) => (
                         <li key={task.id} className={styles.searchItem}>{task.title}</li>
                       ))}
                     </ul>
                   </div>
                 )}
-                {searchResults.projects.length > 0 && (
-                  <div className={styles.searchSection}>
-                    <h3>Projects</h3>
-                    <ul className={styles.searchList}>
-                      {searchResults.projects.map((project) => (
-                        <li key={project.id} className={styles.searchItem}>{project.name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {searchResults.followers.length > 0 && (
-                  <div className={styles.searchSection}>
-                    <h3>Followers</h3>
-                    <ul className={styles.searchList}>
-                      {searchResults.followers.map((follower) => (
-                        <li key={follower.id} className={styles.searchItem}>{follower.name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
+              </div>
             )}
           </div>
-        )}
-      </div>
-    </div>
-    <div className={styles.dropdownContainer}>
-      <div className={styles.iconContainer}>
-        <FaBell 
-          className={styles.icon} 
-          onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
-        />
-        <FaCommentDots 
-          className={styles.icon} 
-          onClick={() => setIsChatsOpen(!isChatsOpen)} 
-        />
-      </div>
-      <button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className={styles.dropdownButton}
-      >
-        {username} <FaChevronDown />
-      </button>
-      {isDropdownOpen && (
-        <div className={styles.dropdownMenu}>
-          <div className={styles.dropdownItem} onClick={() => handleNavigation("/profile")}>Profile</div>
-          <div className={styles.dropdownItem} onClick={() => handleNavigation("/todos")}>MyTodo</div>
-          <div className={styles.dropdownItem} onClick={() => handleNavigation("/settings")}>Settings</div>
-          <div className={styles.dropdownItem} onClick={() => handleNavigation("/login")}>Logout</div>
+        </div>
+        <div className={styles.dropdownContainer}>
+          <div className={styles.iconContainer}>
+            <FaBell 
+              className={styles.icon} 
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+            />
+            <FaCommentDots 
+              className={styles.icon} 
+              onClick={() => setIsChatsOpen(!isChatsOpen)} 
+            />
+          </div>
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={styles.dropdownButton}
+          >
+            {username} <FaChevronDown />
+          </button>
+          {isDropdownOpen && (
+            <div className={styles.dropdownMenu}>
+              <div className={styles.dropdownItem} onClick={() => navigate("/profile")}>Profile</div>
+              <div className={styles.dropdownItem} onClick={() => navigate("/todos")}>MyTodo</div>
+              <div className={styles.dropdownItem} onClick={() => navigate("/settings")}>Settings</div>
+              <div className={styles.dropdownItem} onClick={() => navigate("/login")}>Logout</div>
+            </div>
+          )}
+        </div>
+      </header>
+      {isNotificationsOpen && (
+        <div className={styles.notificationsDropdown}>
+          <h3>Notifications</h3>
+          <ul className={styles.notificationsList}>
+            {notifications.length === 0 ? (
+              <p className={styles.noNotificationsMessage}>No notifications</p>
+            ) : (
+              notifications.map(notification => (
+                <li key={notification.id} className={styles.notificationItem}>
+                  {notification.message}
+                </li>
+              ))
+            )}
+          </ul>
         </div>
       )}
-    </div>
-  </header>
-  {isNotificationsOpen && (
-    <div className={styles.notificationsDropdown}>
-      <h3>Notifications</h3>
-      <ul className={styles.notificationsList}>
-        {notifications.length === 0 ? (
-          <p className={styles.noNotificationsMessage}>No notifications</p>
-        ) : (
-          notifications.map(notification => (
-            <li key={notification.id} className={styles.notificationItem}>
-              {notification.message}
-            </li>
-          ))
-        )}
-      </ul>
-    </div>
-  )}
-  {isChatsOpen && (
+      {isChatsOpen && (
         <div className={styles.chatsDropdown}>
           <h3>Chats</h3>
           <ul className={styles.chatsList}>
@@ -235,7 +233,7 @@ const Todos = ({ username }) => {
                 <li key={chat.id} className={styles.chatItem}>
                   {chat.name}
                   <br/>
-                   <button><a href={"/chat"}>read more</a></button>
+                  <button><a href={`/chat/${chat.id}`}>Read more</a></button>
                 </li>
               ))
             )}
@@ -250,12 +248,41 @@ const Todos = ({ username }) => {
               <input
                 type="text"
                 className={styles.input}
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-                placeholder="Add a new task..."
+                value={task.title}
+                onChange={(e) => setTask({ ...task, title: e.target.value })}
+                placeholder="Title"
               />
+              <textarea
+                className={styles.input}
+                value={task.description}
+                onChange={(e) => setTask({ ...task, description: e.target.value })}
+                placeholder="Description"
+              />
+              <input
+                type="text"
+                className={styles.input}
+                value={task.category}
+                onChange={(e) => setTask({ ...task, category: e.target.value })}
+                placeholder="Category"
+              />
+              <input
+                type="date"
+                className={styles.input}
+                value={task.deadline}
+                onChange={(e) => setTask({ ...task, deadline: e.target.value })}
+                placeholder="Deadline"
+              />
+              <select
+                className={styles.input}
+                value={task.status}
+                onChange={(e) => setTask({ ...task, status: e.target.value })}
+              >
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="in-progress">In Progress</option>
+              </select>
               {isEditing ? (
-                <button onClick={handleSaveTask} className={styles.addButton}>
+                <button onClick={handleEditTask} className={styles.addButton}>
                   Save
                 </button>
               ) : (
@@ -264,7 +291,7 @@ const Todos = ({ username }) => {
                 </button>
               )}
             </div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className={styles.errorMessage}>{error}</p>}
             <div className={styles.scrollView}>
               {currentTasks.length === 0 ? (
                 <p className={styles.noTasksMessage}>No tasks available</p>
@@ -274,21 +301,15 @@ const Todos = ({ username }) => {
                     <li key={task.id} className={styles.taskItem}>
                       <div>
                         <span className={styles.taskTitle}>{task.title}</span>
-                        <span className={styles.taskDate}>{task.date}</span>
+                        <span className={styles.taskDate}>{task.deadline}</span>
                       </div>
                       <div className={styles.taskActions}>
-                        <button
-                          onClick={() => handleEditTask(task.id)}
-                          className={styles.editButton}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteTask(task.id)}
-                          className={styles.deleteButton}
-                        >
-                          Delete
-                        </button>
+                        <button onClick={() => handleTaskClick(task)} className={styles.viewButton}>View</button>
+                        <button onClick={() => { 
+                          setTask(task);
+                          setIsEditing(task.id);
+                        }} className={styles.editButton}>Edit</button>
+                        <button onClick={() => handleDeleteTask(task.id)} className={styles.deleteButton}>Delete</button>
                       </div>
                     </li>
                   ))}
@@ -314,6 +335,18 @@ const Todos = ({ username }) => {
       <footer className={styles.footer}>
         &copy; 2024 YOUDO. All rights reserved.
       </footer>
+      {isPopupOpen && selectedTask && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <button className={styles.closeButton} onClick={handleClosePopup}>Close</button>
+            <h3 className={styles.popupTitle}>{selectedTask.title}</h3>
+            <p><strong>Description:</strong> {selectedTask.description}</p>
+            <p><strong>Status:</strong> {selectedTask.status}</p>
+            <p><strong>Deadline:</strong> {selectedTask.deadline}</p>
+            <p><strong>Category:</strong> {selectedTask.category}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

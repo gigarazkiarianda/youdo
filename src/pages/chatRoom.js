@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import styles from "../style/chat.module.css"; // Ensure this path is correct
+import styles from "../style/chat.module.css"; 
 import {
   FaSearch,
   FaChevronDown,
@@ -21,7 +21,7 @@ import {
 const ITEMS_PER_PAGE = 5;
 
 const ChatRoom = () => {
-  const { chatId } = useParams(); // Get chat ID from URL
+  const { chatId } = useParams(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +34,8 @@ const ChatRoom = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isChatsOpen, setIsChatsOpen] = useState(false);
-  const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
+  const [selectedChat, setSelectedChat] = useState(null); 
+  const [currentDate, setCurrentDate] = useState(new Date().toLocaleDateString());
 
   const navigate = useNavigate();
   const messageEndRef = useRef(null);
@@ -51,11 +52,17 @@ const ChatRoom = () => {
           id: 1,
           user: "System",
           text: `You are now chatting with ${selectedChat.name}.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
-        { id: 2, user: selectedChat.name, text: selectedChat.message },
+        {
+          id: 2,
+          user: selectedChat.name,
+          text: selectedChat.message,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
       ]);
     } else {
-      setChatMessages([]); // Reset messages if no chat is selected
+      setChatMessages([]); 
     }
   }, [selectedChat]);
 
@@ -88,11 +95,24 @@ const ChatRoom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(new Date().toLocaleDateString());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSendMessage = () => {
     if (message.trim()) {
       setChatMessages((prevMessages) => [
         ...prevMessages,
-        { id: prevMessages.length + 1, user: "You", text: message },
+        {
+          id: prevMessages.length + 1,
+          user: "You",
+          text: message,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
       ]);
       setMessage("");
     }
@@ -147,113 +167,149 @@ const ChatRoom = () => {
         </div>
       </aside>
       <main className={styles.mainContent}>
-        <header className={styles.header}>
-          <div className={styles.searchContainer}>
-            <input
-              type="text"
-              className={styles.searchInput}
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsSearchOpen(true)}
-              onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
-            />
-            <FaSearch className={styles.searchIcon} size={20} />
-            {isSearchOpen && (
-              <div className={styles.searchDropdown}>
-                {searchQuery.trim() === "" ? null : searchResults.tasks
-                    .length === 0 && searchResults.projects.length === 0 ? (
-                  <div className={styles.noResultsMessage}>
-                    No results found
+      <header className={styles.header}>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setIsSearchOpen(true)}
+          onBlur={() => setTimeout(() => setIsSearchOpen(false), 100)}
+        />
+        <FaSearch className={styles.searchIcon} size={20} />
+        {isSearchOpen && (
+          <div className={styles.searchDropdown}>
+            {searchQuery.trim() === "" ? null : searchResults.tasks
+                .length === 0 &&
+              searchResults.projects.length === 0 &&
+              searchResults.chats.length === 0 ? (
+              <div className={styles.noResultsMessage}>
+                No results found
+              </div>
+            ) : (
+              <>
+                {searchResults.tasks.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Tasks</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.tasks.map((task) => (
+                        <li key={task.id} className={styles.searchItem}>
+                          {task.title}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                ) : (
-                  <>
-                    {searchResults.tasks.length > 0 && (
-                      <div className={styles.searchSection}>
-                        <h3>Tasks</h3>
-                        <ul className={styles.searchList}>
-                          {searchResults.tasks.map((task) => (
-                            <li key={task.id} className={styles.searchItem}>
-                              {task.title}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {searchResults.projects.length > 0 && (
-                      <div className={styles.searchSection}>
-                        <h3>Projects</h3>
-                        <ul className={styles.searchList}>
-                          {searchResults.projects.map((project) => (
-                            <li key={project.id} className={styles.searchItem}>
-                              {project.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {searchResults.chats.length > 0 && (
-                      <div className={styles.searchSection}>
-                        <h3>Chats</h3>
-                        <ul className={styles.searchList}>
-                          {searchResults.chats.map((chat) => (
-                            <li key={chat.id} className={styles.searchItem}>
-                              {chat.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </>
                 )}
-              </div>
+                {searchResults.projects.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Projects</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.projects.map((project) => (
+                        <li key={project.id} className={styles.searchItem}>
+                          {project.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {searchResults.chats.length > 0 && (
+                  <div className={styles.searchSection}>
+                    <h3>Chats</h3>
+                    <ul className={styles.searchList}>
+                      {searchResults.chats.map((chat) => (
+                        <li key={chat.id} className={styles.searchItem}>
+                          {chat.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
           </div>
-          <div className={styles.iconContainer}>
-            <FaBell
-              className={styles.icon}
-              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-            />
-            <FaEnvelope
-              className={styles.icon}
-              onClick={() => setIsChatsOpen(!isChatsOpen)}
-            />
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={styles.dropdownButton}
+        )}
+      </div>
+      <div className={styles.iconContainer}>
+        <FaBell
+          className={styles.icon}
+          onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+        />
+        {isNotificationsOpen && (
+          <div className={styles.notificationsDropdown}>
+            <ul className={styles.notificationsList}>
+              {notifications.length === 0 ? (
+                <li className={styles.noNotificationsMessage}>
+                  No new notifications
+                </li>
+              ) : (
+                notifications.map((notification) => (
+                  <li key={notification.id} className={styles.notificationItem}>
+                    {notification.message}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        )}
+        <FaEnvelope
+          className={styles.icon}
+          onClick={() => setIsChatsOpen(!isChatsOpen)}
+        />
+        {isChatsOpen && (
+          <div className={styles.chatsDropdown}>
+            <ul className={styles.chatsList}>
+              {chats.length === 0 ? (
+                <li className={styles.noChatsMessage}>
+                  No new messages
+                </li>
+              ) : (
+                chats.map((chat) => (
+                  <li key={chat.id} className={styles.chatItem}>
+                    {chat.name}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        )}
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className={styles.dropdownButton}
+        >
+          <FaChevronDown />
+        </button>
+        {isDropdownOpen && (
+          <div className={styles.dropdownMenu}>
+            <div
+              className={styles.dropdownItem}
+              onClick={() => handleNavigation("/profile")}
             >
-            <FaChevronDown />
-            </button>
-            {isDropdownOpen && (
-              <div className={styles.dropdownMenu}>
-                <div
-                  className={styles.dropdownItem}
-                  onClick={() => handleNavigation("/profile")}
-                >
-                  Profile
-                </div>
-                <div
-                  className={styles.dropdownItem}
-                  onClick={() => handleNavigation("/todos")}
-                >
-                  MyTodo
-                </div>
-                <div
-                  className={styles.dropdownItem}
-                  onClick={() => handleNavigation("/settings")}
-                >
-                  Settings
-                </div>
-                <div
-                  className={styles.dropdownItem}
-                  onClick={() => handleNavigation("/login")}
-                >
-                  Logout
-                </div>
-              </div>
-            )}
+              Profile
+            </div>
+            <div
+              className={styles.dropdownItem}
+              onClick={() => handleNavigation("/todos")}
+            >
+              MyTodo
+            </div>
+            <div
+              className={styles.dropdownItem}
+              onClick={() => handleNavigation("/settings")}
+            >
+              Settings
+            </div>
+            <div
+              className={styles.dropdownItem}
+              onClick={() => handleNavigation("/login")}
+            >
+              Logout
+            </div>
           </div>
-        </header>
+        )}
+      </div>
+    </header>
         <section className={styles.profileSection}>
           <div className={styles.profileHeader}>
             <img
@@ -275,15 +331,19 @@ const ChatRoom = () => {
             </div>
           ) : (
             <>
+              <div className={styles.currentDate}>{currentDate}</div> {/* Display current date */}
               <div className={styles.chatMessages}>
                 {chatMessages.map((msg) => (
                   <div
                     key={msg.id}
                     className={
-                      msg.user === "You" ? styles.myMessage : styles.theirMessage
+                      msg.user === "You"
+                        ? styles.myMessage
+                        : styles.theirMessage
                     }
                   >
                     <p>{msg.text}</p>
+                    <span className={styles.timestamp}>{msg.timestamp}</span>
                   </div>
                 ))}
                 <div ref={messageEndRef} />
@@ -297,7 +357,10 @@ const ChatRoom = () => {
                   onKeyDown={handleKeyDown}
                   placeholder="Type a message..."
                 />
-                <button className={styles.sendButton} onClick={handleSendMessage}>
+                <button
+                  className={styles.sendButton}
+                  onClick={handleSendMessage}
+                >
                   <FaPaperPlane />
                 </button>
               </div>

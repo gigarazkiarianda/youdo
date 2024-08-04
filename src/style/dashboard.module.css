@@ -22,14 +22,15 @@ body {
   min-height: 100vh; /* Use min-height to ensure full viewport coverage */
   background: linear-gradient(135deg, #f9f1e7, #f79c4d); /* Gradient background */
 }
+
 /* Header styles */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffcf94; 
+  background-color: #ffcf94;
   padding: 10px 20px;
-  color: #3e3e3e; 
+  color: #3e3e3e;
   width: 100%;
   box-sizing: border-box;
   position: fixed;
@@ -113,7 +114,7 @@ body {
 
 .notificationsDropdown {
   position: fixed;
-  top: 60px; 
+  top: 60px;
   right: 10px;
   width: 250px;
   background-color: #fcdd9b;
@@ -173,7 +174,7 @@ body {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: #ffcf94; 
+  background-color: #ffcf94;
   border: 1px solid #d8cfc4;
   border-radius: 0.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -191,18 +192,19 @@ body {
   padding: 0.5rem 1rem;
   cursor: pointer;
   text-align: left;
-  color: #3e3e3e; 
+  color: #3e3e3e;
 }
 
 .dropdownItem:hover {
-  background-color: #bfae9d; 
+  background-color: #bfae9d;
 }
+
 .chatsDropdown {
   position: fixed;
   right: 0;
-  top: 80px; 
+  top: 80px;
   width: 300px;
-  background-color: #ffcf94; 
+  background-color: #ffcf94;
   border: 1px solid #d8cfc4;
   border-radius: 0.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -299,20 +301,21 @@ body {
   cursor: pointer;
   border-radius: 5px;
   font-size: 14px;
+  margin: 5px;
 }
 
 .editButton {
-  background-color: #007bff;
+  background-color: #ffb342;
   color: white;
 }
 
 .deleteButton {
-  background-color: #dc3545;
+  background-color: #ff6600;
   color: white;
 }
 
 .followButton {
-  background-color: #28a745;
+  background-color: #e09200cb;
   color: white;
 }
 
@@ -332,7 +335,7 @@ body {
 }
 
 .pagination button {
-  background-color: #007bff;
+  background-color: #ffc549;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -342,7 +345,7 @@ body {
 }
 
 .pagination button:disabled {
-  background-color: #6c757d;
+  background-color: #834a009a;
 }
 
 .readMore {
@@ -405,7 +408,7 @@ body {
 
   .main {
     flex-direction: column;
-    margin-top: 60px; /* Adjusted to fit header space */
+    margin-top: 100px; /* Adjusted to fit header space */
   }
 
   .card {

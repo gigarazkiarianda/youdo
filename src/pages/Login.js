@@ -8,7 +8,7 @@ import googleIcon from '../assets/google.png';
 import appleIcon from '../assets/apple.png';
 
 const Login = () => {
-  const [username, setUsername] = useState(''); // Updated state for username
+  const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false); 

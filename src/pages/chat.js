@@ -2,10 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/chat.module.css"; // Ensure this path is correct
-import { FaSearch, FaChevronDown, FaBell, FaEnvelope, FaPaperPlane } from "react-icons/fa";
-import { tasks, projects, notifications, chats, followers, profile } from "../data/DashboardDummy";
-
-const ITEMS_PER_PAGE = 5;
+import {
+  FaSearch,
+  FaChevronDown,
+  FaBell,
+  FaEnvelope,
+  FaPaperPlane,
+} from "react-icons/fa";
+import {
+  tasks,
+  projects,
+  notifications,
+  chats,
+  followers,
+  profile,
+} from "../data/DashboardDummy";
 
 const ChatRoom = ({ username }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -25,7 +36,8 @@ const ChatRoom = ({ username }) => {
   const messageEndRef = useRef(null);
 
   // Assume profile information is stored in the `profile` object
-  const userProfile = followers.find((follower) => follower.username === username) || profile;
+  const userProfile =
+    followers.find((follower) => follower.username === username) || profile;
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -45,7 +57,7 @@ const ChatRoom = ({ username }) => {
       project.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const searchChats = chats.filter((chat) => 
+    const searchChats = chats.filter((chat) =>
       chat.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -87,7 +99,10 @@ const ChatRoom = ({ username }) => {
             <h2>Chats</h2>
             <ul>
               {chats.map((chat) => (
-                <li key={chat.id} onClick={() => handleNavigation(`/chat/${chat.id}`)}>
+                <li
+                  key={chat.id}
+                  onClick={() => handleNavigation(`/chat/${chat.id}`)}
+                >
                   {chat.name}
                 </li>
               ))}
@@ -97,7 +112,10 @@ const ChatRoom = ({ username }) => {
             <h2>Projects</h2>
             <ul>
               {projects.map((project) => (
-                <li key={project.id} onClick={() => handleNavigation(`/project/${project.id}`)}>
+                <li
+                  key={project.id}
+                  onClick={() => handleNavigation(`/project/${project.id}`)}
+                >
                   {project.name}
                 </li>
               ))}
@@ -120,7 +138,8 @@ const ChatRoom = ({ username }) => {
             <FaSearch className={styles.searchIcon} size={20} />
             {isSearchOpen && (
               <div className={styles.searchDropdown}>
-                {searchQuery.trim() === "" ? null : searchResults.tasks.length === 0 &&
+                {searchQuery.trim() === "" ? null : searchResults.tasks
+                    .length === 0 &&
                   searchResults.projects.length === 0 &&
                   searchResults.chats.length === 0 ? (
                   <div className={styles.noResultsMessage}>
@@ -174,10 +193,44 @@ const ChatRoom = ({ username }) => {
               className={styles.icon}
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
             />
+            {isNotificationsOpen && (
+              <div className={styles.notificationsDropdown}>
+                <ul className={styles.notificationsList}>
+                  {notifications.length === 0 ? (
+                    <li className={styles.noNotificationsMessage}>
+                      No new notifications
+                    </li>
+                  ) : (
+                    notifications.map((notification) => (
+                      <li key={notification.id} className={styles.notificationItem}>
+                        {notification.message}
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+            )}
             <FaEnvelope
               className={styles.icon}
               onClick={() => setIsChatsOpen(!isChatsOpen)}
             />
+            {isChatsOpen && (
+              <div className={styles.chatsDropdown}>
+                <ul className={styles.chatsList}>
+                  {chats.length === 0 ? (
+                    <li className={styles.noChatsMessage}>
+                      No new messages
+                    </li>
+                  ) : (
+                    chats.map((chat) => (
+                      <li key={chat.id} className={styles.chatItem}>
+                        {chat.name}
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+            )}
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className={styles.dropdownButton}
@@ -220,20 +273,36 @@ const ChatRoom = ({ username }) => {
         <div className={styles.chatRoom}>
           <div className={styles.chatMessages}>
             {chatMessages.length === 0 ? (
-              <div className={styles.noChatMessage}>
-                No chat selected
-              </div>
+              <div className={styles.noChatMessage}>No chat selected</div>
             ) : (
               chatMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={msg.user === username ? styles.myMessage : styles.theirMessage}
+                  className={
+                    msg.user === username ? styles.myMessage : styles.theirMessage
+                  }
                 >
                   <p>{msg.text}</p>
                 </div>
               ))
             )}
             <div ref={messageEndRef} />
+          </div>
+          <div className={styles.messageInputContainer}>
+            <input
+              type="text"
+              className={styles.messageInput}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message"
+            />
+            <button
+              className={styles.sendMessageButton}
+              onClick={handleSendMessage}
+            >
+              <FaPaperPlane size={20} />
+            </button>
           </div>
         </div>
       </main>

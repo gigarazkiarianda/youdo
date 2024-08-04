@@ -3,13 +3,13 @@
     display: flex;
     height: 100vh;
     overflow: hidden;
-    position: relative; /* Ensure proper stacking and alignment */
+    position: relative; 
 }
 
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background-color: #ffcf94; /* Updated color */
+    background-color: #ffcf94; 
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -32,7 +32,7 @@
     padding: 10px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1100; /* Above sidebar */
+    z-index: 1100;
 }
 
 /* Sidebar open */
@@ -65,7 +65,7 @@
 .sidebarSection h2 {
     font-size: 18px;
     margin-bottom: 10px;
-    color: #3e3e3e; /* Updated color */
+    color: #3e3e3e; 
 }
 
 .sidebarSection ul {
@@ -77,11 +77,11 @@
     padding: 10px;
     cursor: pointer;
     border-radius: 5px;
-    color: #333; /* Updated color */
+    color: #333; 
 }
 
 .sidebarSection ul li:hover {
-    background-color: #f9b25d; /* Updated color */
+    background-color: #f9b25d; 
 }
 
 /* Main content */
@@ -90,7 +90,7 @@
     padding: 20px;
     flex: 1;
     overflow-y: auto;
-    background-color: #f9f1e7; /* Updated color */
+    background-color: #f9f1e7; 
     transition: margin-left 0.3s ease;
 }
 
@@ -101,11 +101,11 @@
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    background-color: #ffcf94; /* Updated color */
+    background-color: #ffcf94;
     position: fixed;
     top: 0;
-    left: 250px; /* Align with the main content margin-left */
-    width: calc(100% - 250px); /* Full width minus sidebar width */
+    left: 250px; 
+    width: calc(100% - 250px); 
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
@@ -126,7 +126,7 @@
 
 .headerTitle {
     font-size: 24px;
-    color: #3e3e3e; /* Updated color */
+    color: #3e3e3e; 
 }
 
 /* Search container */
@@ -149,7 +149,7 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    color: #333; /* Updated color */
+    color: #333; 
 }
 
 /* Dropdown styles */
@@ -170,14 +170,14 @@
 .dropdownMenu,
 .notificationsDropdown,
 .chatsDropdown {
-    background-color: #ffcf94; /* Updated color */
+    background-color: #ffcf94; 
 }
 
 .searchSection,
 .notificationsDropdown h3,
 .chatsDropdown h3 {
     padding: 10px;
-    color: #3e3e3e; /* Updated color */
+    color: #3e3e3e; 
 }
 
 .notificationsList,
@@ -192,20 +192,20 @@
 .notificationItem,
 .chatItem {
     padding: 10px;
-    color: #333; /* Updated color */
+    color: #333; 
 }
 
 .searchItem:hover,
 .dropdownItem:hover,
 .notificationItem:hover,
 .chatItem:hover {
-    background-color: #f9b25d; /* Updated color */
+    background-color: #f9b25d; 
 }
 
 .dropdownItem {
     padding: 10px;
     cursor: pointer;
-    color: #333; /* Updated color */
+    color: #333; 
 }
 
 /* Icons */
@@ -217,7 +217,7 @@
 .icon {
     margin: 0 10px;
     cursor: pointer;
-    color: #3e3e3e; /* Updated color */
+    color: #3e3e3e; 
 }
 
 /* Settings content */
@@ -227,7 +227,7 @@
 
 .settingsContent h2 {
     margin-bottom: 20px;
-    color: #3e3e3e; /* Updated color */
+    color: #3e3e3e; 
 }
 
 .setting {
@@ -237,7 +237,7 @@
 .setting label {
     display: block;
     margin-bottom: 10px;
-    color: #333; /* Updated color */
+    color: #333; 
 }
 
 .setting label input {
@@ -259,9 +259,11 @@
 }
 
 .profilePicture {
-    width: 60px; /* Adjust size for smaller screens */
-    height: 60px;
     border-radius: 50%;
+    width: 70px; 
+    height: 70px; 
+    object-fit: cover;
+    border: 3px solid #ddd;
 }
 
 .profileInfo {
@@ -281,28 +283,63 @@
 .myMessage,
 .theirMessage {
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     margin-bottom: 10px;
     max-width: 70%;
+    word-wrap: break-word; 
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    position: relative;
+}
+
+.currentDate {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.chatMessages {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    overflow-y: auto;
+    flex-grow: 1; 
 }
 
 .myMessage {
-    background-color: #e1ffc7;
     align-self: flex-end;
+    background-color: #dcf8c6;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
 }
 
 .theirMessage {
-    background-color: #f1f1f1;
     align-self: flex-start;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
 }
 
+.timestamp {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px; 
+    display: block; 
+    text-align: right; 
+}
 /* Message input container */
 .messageInputContainer {
     display: flex;
     position: fixed;
-    bottom: 50px; /* Position above footer */
-    left: 250px; /* Align with main content */
-    width: calc(100% - 250px); /* Full width minus sidebar */
+    bottom: 50px; 
+    left: 250px; 
+    width: calc(100% - 250px); 
     padding: 10px;
     background-color: #fff;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
@@ -332,9 +369,9 @@
     border-top: 1px solid #ddd;
     position: fixed;
     bottom: 0;
-    left: 250px; /* Align with the main content margin-left */
-    width: calc(100% - 250px); /* Full width minus sidebar width */
-    background-color: #ffcf94; /* Updated color */
+    left: 250px; 
+    width: calc(100% - 250px); 
+    background-color: #ffcf94; 
     z-index: 10;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -355,8 +392,8 @@
     }
 
     .header {
-        left: 0; /* Full width on smaller screens */
-        width: 100%; /* Full width on smaller screens */
+        left: 0; 
+        width: 100%; 
     }
 
     .headerLeft,
@@ -389,8 +426,8 @@
     }
 
     .footer {
-        left: 0; /* Full width on smaller screens */
-        width: 100%; /* Full width on smaller screens */
+        left: 0; 
+        width: 100%; 
     }
 }
 
@@ -404,7 +441,7 @@
     }
 
     .sidebar.closed {
-        transform: translateX(-200px); /* Width of the sidebar */
+        transform: translateX(-200px); 
     }
 
     .sidebarToggle {
@@ -417,8 +454,8 @@
     }
 
     .header {
-        left: 0; /* Full width on smaller screens */
-        width: 100%; /* Full width on smaller screens */
+        left: 0; 
+        width: 100%; 
     }
 
     .searchInput {
@@ -436,8 +473,11 @@
     }
 
     .profilePicture {
-        width: 50px;
-        height: 50px;
+        border-radius: 50%;
+        width: 70px; 
+        height: 70px; 
+        object-fit: cover;
+        border: 3px solid #ddd;
     }
 
     .profileInfo h2 {
@@ -494,8 +534,11 @@
     }
 
     .profilePicture {
-        width: 40px;
-        height: 40px;
+        border-radius: 50%;
+        width: 70px; 
+        height: 70px; 
+        object-fit: cover;
+        border: 3px solid #ddd;
     }
 
     .profileInfo h2 {
