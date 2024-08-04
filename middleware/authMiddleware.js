@@ -1,5 +1,5 @@
 const pool = require('../config/db');
-const { verifyToken } = require('../config/jwt'); // Import the verifyToken function
+const { verifyToken } = require('../config/jwt'); 
 
 const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];

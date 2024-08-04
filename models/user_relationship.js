@@ -1,41 +1,61 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const User = require('./user'); // Asumsi Anda memiliki model User
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); 
+const User = require('./User'); 
 
-const UserRelationship = sequelize.define('UserRelationship', {
-  followerId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id'
-    }
+class UserRelationship extends Model {}
+
+UserRelationship.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    followerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
+    followingId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
-  followingId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id'
-    }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+  {
+    sequelize,
+    modelName: 'UserRelationship',
+    tableName: 'user_relationships',
+    timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['followerId', 'followingId'],
+      },
+    ],
   }
-}, {
-  tableName: 'user_relationships',
-  timestamps: false,
-  indexes: [
-    {
-      unique: true,
-      fields: ['followerId', 'followingId']
-    }
-  ]
-});
+);
 
-// Set up associations
-UserRelationship.belongsTo(User, { as: 'follower', foreignKey: 'followerId' });
-UserRelationship.belongsTo(User, { as: 'following', foreignKey: 'followingId' });
+// Define associations
+UserRelationship.belongsTo(User, { foreignKey: 'followerId', as: 'follower' });
+UserRelationship.belongsTo(User, { foreignKey: 'followingId', as: 'following' });
 
 module.exports = UserRelationship;

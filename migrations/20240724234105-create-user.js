@@ -27,7 +27,38 @@ module.exports = {
       jwtSecret: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: '', // Set default value as empty string or use `NULL` if appropriate
+        defaultValue: '', 
+      },
+      fullname: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      number_phone: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      photo: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        validate: {
+          isIn: [['jpeg', 'png', 'jpg']],
+        },
+      },
+      followers_count: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      following_count: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      projects_count: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

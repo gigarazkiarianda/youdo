@@ -16,4 +16,13 @@ module.exports = {
   ChatRoom, 
   Message,
   UserChatRoom,
+  ChatParticipant
 };
+
+Object.values(models).forEach(model => {
+  if (typeof model.associate === 'function') {
+    model.associate(models);
+  }
+});
+
+module.exports = models;

@@ -14,7 +14,7 @@ exports.getAllTodos = async (req, res) => {
 // Create todo (public route)
 exports.createTodo = async (req, res) => {
   try {
-    const { title, completed, userId } = req.body; // Include userId in request body
+    const { title, completed, userId } = req.body; 
     const [result] = await pool.query('INSERT INTO todos (title, completed, user_id) VALUES (?, ?, ?)', [title, completed, userId]);
     res.status(201).json({ id: result.insertId });
   } catch (error) {

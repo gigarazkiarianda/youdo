@@ -1,16 +1,59 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); 
+const User = require('./User'); 
 
-const Project = sequelize.define('Project', {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
+class Project extends Model {}
+
+Project.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true, 
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: true, // Allow null if no category is assigned
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
-  description: {
-    type: DataTypes.TEXT,
-  },
-}, {
-  tableName: 'projects',
-});
+  {
+    sequelize,
+    modelName: 'Project',
+    tableName: 'projects',
+    timestamps: true,
+  }
+);
+
+// Define associations
+Project.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 module.exports = Project;

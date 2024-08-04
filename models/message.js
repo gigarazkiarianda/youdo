@@ -1,28 +1,55 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Adjust the path to your database configuration
+const ChatRoom = require('./chatRoom'); // Adjust the path to your ChatRoom model
+const User = require('./User'); // Adjust the path to your User model
 
-const db = require('../config/db');
+class Message extends Model {}
 
-class Message {
-  static async create({ chat_room_id, user_id, message }) {
-    const [result] = await db.query(
-      'INSERT INTO messages (chat_room_id, user_id, message) VALUES (?, ?, ?)',
-      [chat_room_id, user_id, message]
-    );
-    return result.insertId;
+Message.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    chat_room_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: ChatRoom,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
+    message: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    sent_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    sequelize,
+    modelName: 'Message',
+    tableName: 'messages',
+    timestamps: false, 
   }
+);
 
-  static async findById(id) {
-    const [rows] = await db.query('SELECT * FROM messages WHERE id = ?', [id]);
-    return rows[0];
-  }
-
-  static async findByChatRoom(chat_room_id) {
-    const [rows] = await db.query('SELECT * FROM messages WHERE chat_room_id = ?', [chat_room_id]);
-    return rows;
-  }
-  
-  static async delete(id) {
-    await db.query('DELETE FROM messages WHERE id = ?', [id]);
-  }
-}
+// Define associations
+Message.belongsTo(ChatRoom, { foreignKey: 'chat_room_id', as: 'chatRoom' });
+Message.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 module.exports = Message;
