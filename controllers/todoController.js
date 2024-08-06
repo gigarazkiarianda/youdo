@@ -55,11 +55,28 @@ exports.getTodoById = async (req, res) => {
   }
 };
 
-// Update todo (protected route)
+// Get todos by user ID (protected route)
+exports.getTodosByUserId = async (req, res) => {
+  const userId = req.session.userId; // Get UserId from the session
+
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+
+  try {
+    const [rows] = await pool.query('SELECT * FROM todos WHERE userId = ?', [userId]);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error retrieving todos for user:', error.message);
+    res.status(500).json({ message: 'Error retrieving todos for user', error: error.message });
+  }
+};
+
+
 exports.updateTodo = async (req, res) => {
   const todoId = req.params.id;
   const { title, description, category, deadline, status } = req.body;
-  const userId = req.session.userId; // Get UserId from the session
+  const userId = req.session.userId; 
 
   if (!todoId || !title || !description || !category || !deadline || !status) {
     return res.status(400).json({ message: 'Required fields are missing' });
@@ -82,10 +99,10 @@ exports.updateTodo = async (req, res) => {
   }
 };
 
-// Delete todo (protected route)
+
 exports.deleteTodo = async (req, res) => {
   const todoId = req.params.id;
-  const userId = req.session.userId; // Get UserId from the session
+  const userId = req.session.userId; 
 
   if (!todoId) {
     return res.status(400).json({ message: 'Todo ID is required' });

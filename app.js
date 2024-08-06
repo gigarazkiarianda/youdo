@@ -12,8 +12,17 @@ const errorHandler = require('./utils/errorHandler');
 // Initialize Express app
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000', // Frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions)); // Enable CORS with options
+
 // Middleware setup
-app.use(cors()); // Enable CORS
 app.use(cookieParser()); // Parse cookies from HTTP requests
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
