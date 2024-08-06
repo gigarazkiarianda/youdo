@@ -1,52 +1,24 @@
-const pool = require('../config/db');
-const { verifyToken } = require('../config/jwt'); 
+const { pool } = require('../config/database'); // Pastikan path ini sesuai dengan konfigurasi database Anda
 
-const authenticateToken = async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    console.log('Received token:', token);
-
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
+// Middleware untuk memverifikasi sesi pengguna
+const authenticateSession = async (req, res, next) => {
+  if (req.session && req.session.userId) {
     try {
-        // Decode and verify the token
-        const decoded = await verifyToken(token);
-        console.log('Decoded token:', decoded);
-
-        const userId = decoded.id;
-        console.log('Extracted userId from token:', userId);
-
-        // Fetch the user from the database to get the JWT secret if needed
-        const [rows] = await pool.query('SELECT jwtSecret FROM users WHERE id = ?', [userId]);
-        console.log('Database user secret:', rows);
-
-        const user = rows[0];
-
-        if (!user) {
-            return res.status(403).json({ message: 'User not found' });
-        }
-
-        // Verify the token again with the user's secret if available
-        await verifyToken(token, user.jwtSecret || process.env.DEFAULT_JWT_SECRET);
-        
-        // Attach userId to request object for use in controllers
-        req.userId = userId;
-        req.user = decoded;  // Optionally attach the whole user object if needed
-        next();
-        
-    } catch (err) {
-        console.error('Token verification error:', err);
-        
-        // Differentiate between token format and general verification errors
-        if (err.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Invalid token format' });
-        }
-        
-        res.status(500).json({ message: 'Token verification error' });
+      // Verifikasi sesi pengguna
+      const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [req.session.userId]);
+      if (rows.length) {
+        req.user = rows[0]; // Lampirkan data pengguna ke objek request
+        return next();
+      } else {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+    } catch (error) {
+      console.error('Session verification error:', error.message);
+      return res.status(500).json({ message: 'Error verifying session' });
     }
+  } else {
+    return res.status(401).json({ message: 'No session found' });
+  }
 };
 
-module.exports = authenticateToken;
+module.exports = authenticateSession;

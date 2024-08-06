@@ -1,21 +1,12 @@
-const pool = require('../config/db');
-const { authenticateToken } = require('../middleware/authMiddleware'); // Ensure this path is correct
+// controllers/todoController.js
+const pool = require('../config/database');
 
 // Create todo (protected route)
 exports.createTodo = async (req, res) => {
   const { title, description, category, deadline, status } = req.body;
-  const userId = req.userId; // Get UserId from the request object
-
-  console.log('UserID from request:', userId); // Debugging line
+  const userId = req.session.userId; // Get UserId from the session
 
   if (!title || !description || !category || !deadline || !status) {
-    console.log('Validation failed. Missing fields:', {
-      title,
-      description,
-      category,
-      deadline,
-      status,
-    });
     return res.status(400).json({ message: 'Required fields are missing' });
   }
 
@@ -27,7 +18,7 @@ exports.createTodo = async (req, res) => {
 
     res.status(201).json({ id: result.insertId });
   } catch (error) {
-    console.error('Error creating todo:', error.message, error.stack);
+    console.error('Error creating todo:', error.message);
     res.status(500).json({ message: 'Error creating todo', error: error.message });
   }
 };
@@ -68,51 +59,22 @@ exports.getTodoById = async (req, res) => {
 exports.updateTodo = async (req, res) => {
   const todoId = req.params.id;
   const { title, description, category, deadline, status } = req.body;
-  const userId = req.userId; // Get UserId from the request object
+  const userId = req.session.userId; // Get UserId from the session
 
-  if (!todoId) {
-    return res.status(400).json({ message: 'Todo ID is required' });
+  if (!todoId || !title || !description || !category || !deadline || !status) {
+    return res.status(400).json({ message: 'Required fields are missing' });
   }
-
-  const fields = [];
-  const values = [];
-
-  if (title) {
-    fields.push('title = ?');
-    values.push(title);
-  }
-  if (description) {
-    fields.push('description = ?');
-    values.push(description);
-  }
-  if (category) {
-    fields.push('category = ?');
-    values.push(category);
-  }
-  if (deadline) {
-    fields.push('deadline = ?');
-    values.push(deadline);
-  }
-  if (status) {
-    fields.push('status = ?');
-    values.push(status);
-  }
-
-  if (fields.length === 0) {
-    return res.status(400).json({ message: 'No fields provided for update' });
-  }
-
-  values.push(todoId); // Add the todoId to the end of values array
 
   try {
     const [result] = await pool.query(
-      `UPDATE todos SET ${fields.join(', ')}, updatedAt = NOW() WHERE id = ? AND userId = ?`,
-      [...values, userId]
+      'UPDATE todos SET title = ?, description = ?, category = ?, deadline = ?, status = ?, updatedAt = NOW() WHERE id = ? AND userId = ?',
+      [title, description, category, deadline, status, todoId, userId]
     );
+
     if (result.affectedRows) {
       res.json({ message: 'Todo updated successfully' });
     } else {
-      res.status(404).json({ message: 'Todo not found or not authorized to update' });
+      res.status(404).json({ message: 'Todo not found or unauthorized' });
     }
   } catch (error) {
     console.error('Error updating todo:', error.message);
@@ -123,7 +85,7 @@ exports.updateTodo = async (req, res) => {
 // Delete todo (protected route)
 exports.deleteTodo = async (req, res) => {
   const todoId = req.params.id;
-  const userId = req.userId; 
+  const userId = req.session.userId; // Get UserId from the session
 
   if (!todoId) {
     return res.status(400).json({ message: 'Todo ID is required' });
@@ -131,10 +93,11 @@ exports.deleteTodo = async (req, res) => {
 
   try {
     const [result] = await pool.query('DELETE FROM todos WHERE id = ? AND userId = ?', [todoId, userId]);
+
     if (result.affectedRows) {
       res.json({ message: 'Todo deleted successfully' });
     } else {
-      res.status(404).json({ message: 'Todo not found or not authorized to delete' });
+      res.status(404).json({ message: 'Todo not found or unauthorized' });
     }
   } catch (error) {
     console.error('Error deleting todo:', error.message);

@@ -24,11 +24,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      jwtSecret: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: '', 
-      },
       fullname: {
         type: Sequelize.STRING,
         allowNull: true,

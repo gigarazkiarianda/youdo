@@ -1,21 +1,16 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
-const defaultJwtSecret = process.env.DEFAULT_JWT_SECRET;
+// Secret default untuk semua pengguna
+const DEFAULT_JWT_SECRET = process.env.DEFAULT_JWT_SECRET;
 
-const signToken = (payload) => {
-    return jwt.sign(payload, defaultJwtSecret, { expiresIn: '1h' });
+// Fungsi untuk membuat token JWT
+const createToken = (userId) => {
+  return jwt.sign({ id: userId }, DEFAULT_JWT_SECRET, { expiresIn: '1h' });
 };
 
+// Fungsi untuk memverifikasi token JWT
 const verifyToken = (token) => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, defaultJwtSecret, (err, decoded) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(decoded);
-        });
-    });
+  return jwt.verify(token, DEFAULT_JWT_SECRET);
 };
 
-module.exports = { signToken, verifyToken };
+module.exports = { createToken, verifyToken };

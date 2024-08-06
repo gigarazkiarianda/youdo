@@ -1,4 +1,5 @@
-const pool = require('../config/db');
+// controllers/userController.js
+const pool = require('../config/database');
 
 // Mendapatkan semua pengguna
 exports.getAllUsers = async (req, res) => {
