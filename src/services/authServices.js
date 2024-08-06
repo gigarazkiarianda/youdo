@@ -1,38 +1,28 @@
 import axios from 'axios';
 
-// Function to get the token from localStorage
-export const getToken = () => localStorage.getItem('authToken');
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
-// Configure Axios instance
+// Create an Axios instance with cookies enabled
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true // Allow sending cookies with requests
 });
 
-// Interceptor to add the token to the request headers if it exists
-axiosInstance.interceptors.request.use(
-  config => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error)
-);
-
 // Function for login
-export const login = async (username, password, rememberMe) => {
+export const login = async (username, password) => {
   try {
     const response = await axiosInstance.post('/auth/login', {
       username,
       password
     });
-    localStorage.setItem('authToken', response.data.token); 
-    return response.data; 
+    // Server will set the session cookie
+    console.log('Login successful:', response.data);
+    return response.data;
   } catch (error) {
+    console.error('Login failed:', error.response ? error.response.data.message : 'Network Error');
     throw new Error(error.response ? error.response.data.message : 'Network Error');
   }
 };
@@ -45,29 +35,32 @@ export const register = async (username, email, password) => {
       email,
       password
     });
+    console.log('Registration successful:', response.data);
     return response.data;
   } catch (error) {
+    console.error('Registration failed:', error.response ? error.response.data.message : 'Network Error');
     throw new Error(error.response ? error.response.data.message : 'Network Error');
   }
 };
 
-// Function to display the token (for debugging)
-export const displayToken = () => {
-  const token = getToken();
-  console.log('Auth Token:', token); // Log token to console
-  return token;
+// Function to display session (for debugging)
+export const displaySession = async () => {
+  try {
+    const response = await axiosInstance.get('/auth/session');
+    console.log('Session Data:', response.data); // Log session data to console
+    return response.data;
+  } catch (error) {
+    console.error('Failed to retrieve session data:', error.response ? error.response.data.message : 'Network Error');
+  }
 };
 
-// Function to clear the token (logout)
+// Function for logout
 export const logout = async () => {
   try {
-    // Optionally, send a logout request to the server to invalidate the token
     await axiosInstance.post('/auth/logout');
+    console.log('Logout successful');
   } catch (error) {
     console.error('Logout request failed:', error.response ? error.response.data.message : 'Network Error');
-  } finally {
-    // Remove token from localStorage
-    localStorage.removeItem('authToken');
   }
 };
 
@@ -81,6 +74,7 @@ export const makeAuthenticatedRequest = async (method, url, data = null) => {
     });
     return response.data;
   } catch (error) {
+    console.error('Authenticated request failed:', error.response ? error.response.data.message : 'Network Error');
     throw new Error(error.response ? error.response.data.message : 'Network Error');
   }
 };

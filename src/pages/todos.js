@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/todos.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
-import { getAllTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
+import { getAllTodos, createTodo, updateTodo, deleteTodo, getTodosByUserId } from '../services/todoService';
+import { logout } from '../services/authServices';
 import { notifications, chats } from '../data/DashboardDummy';
 
 const Todos = ({ username }) => {
@@ -47,7 +48,7 @@ const Todos = ({ username }) => {
 
   const fetchTodos = async () => {
     try {
-      const data = await getAllTodos();
+      const data = await getTodosByUserId();
       setTasks(data);
     } catch (error) {
       console.error('Failed to fetch todos:', error);
@@ -62,7 +63,6 @@ const Todos = ({ username }) => {
 
     const newTask = {
       ...task,
-      UserId: 2 // Replace with actual user ID from auth context
     };
 
     try {
@@ -85,7 +85,7 @@ const Todos = ({ username }) => {
     try {
       await deleteTodo(id);
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-      handleClosePopup(); // Close popup after delete
+      handleClosePopup(); 
     } catch (error) {
       console.error(`Failed to delete task with id ${id}:`, error);
     }
@@ -133,7 +133,10 @@ const Todos = ({ username }) => {
     });
     setIsEditing(null);
   };
-
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
   const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
@@ -201,7 +204,7 @@ const Todos = ({ username }) => {
               <div className={styles.dropdownItem} onClick={() => navigate("/profile")}>Profile</div>
               <div className={styles.dropdownItem} onClick={() => navigate("/todos")}>MyTodo</div>
               <div className={styles.dropdownItem} onClick={() => navigate("/settings")}>Settings</div>
-              <div className={styles.dropdownItem} onClick={() => navigate("/login")}>Logout</div>
+              <div className={styles.dropdownItem} onClick={handleLogout}>Logout</div>
             </div>
           )}
         </div>

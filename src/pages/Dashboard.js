@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/dashboard.module.css";
 import { FaSearch, FaChevronDown, FaBell, FaEnvelope } from "react-icons/fa";
-import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy'; // Import dummy data
+import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy'; 
+import { getTodosByUserId, updateTodo, deleteTodo } from "../services/todoService";
+import { logout } from "../services/authServices";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -12,6 +14,7 @@ const Dashboard = ({ username }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState({ tasks: [], projects: [], followers: [] });
+  const [tasks, setTasks] = useState([]); // Initialize tasks state
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [currentPageProjects, setCurrentPageProjects] = useState(1);
   const [currentPageFollowers, setCurrentPageFollowers] = useState(1);
@@ -23,9 +26,29 @@ const Dashboard = ({ username }) => {
   const [isFollowing, setIsFollowing] = useState(new Array(followers.length).fill(true)); // Assuming all followers are initially followed
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Fetch tasks for the current user
+    const fetchTasks = async () => {
+      try {
+        const userId = localStorage.getItem("userId"); // Assuming you store userId in localStorage
+        const todos = await getTodosByUserId(userId);
+        setTasks(todos);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
   // Handle navigation
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    handleNavigation("/login");
   };
 
   // Search functionality
@@ -52,7 +75,7 @@ const Dashboard = ({ username }) => {
       projects: searchProjects,
       followers: searchFollowers
     });
-  }, [searchQuery]);
+  }, [searchQuery, tasks]);
 
   // Pagination handlers
   const handlePageChangeTasks = (page) => {
@@ -96,13 +119,21 @@ const Dashboard = ({ username }) => {
     }
   };
 
-  const handleSave = (id, type) => {
-    // Save logic here
+  const handleSave = async (id, type) => {
+    if (type === 'task') {
+      const updatedTaskTitle = tasks.find(task => task.id === id).title;
+      await updateTodo(id, { title: updatedTaskTitle });
+    }
     handleEditToggle(id, type);
   };
 
-  const handleDeleteTask = (id) => {
-    console.log('Task Deleted');
+  const handleDeleteTask = async (id) => {
+    try {
+      await deleteTodo(id);
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   }
 
   return (
@@ -188,7 +219,7 @@ const Dashboard = ({ username }) => {
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/profile")}>Profile</div>
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/todos")}>MyTodo</div>
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/settings")}>Settings</div>
-              <div className={styles.dropdownItem} onClick={() => handleNavigation("/login")}>Logout</div>
+              <div className={styles.dropdownItem} onClick={handleLogout}>Logout</div>
             </div>
           )}
         </div>
