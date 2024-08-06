@@ -1,18 +1,16 @@
-// routes/userRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const verifySession = require('../middleware/verifySession');
 
-// Mendapatkan semua pengguna
-router.get('/', userController.getAllUsers);
+router.get('/', verifySession, userController.getAllUsers);
 
-// Mendapatkan pengguna berdasarkan ID
-router.get('/:id', userController.getUserById);
 
-// Memperbarui informasi pengguna
-router.put('/:id', userController.updateUser);
+router.get('/:id', verifySession, userController.getUserById);
+router.put('/:id', verifySession, userController.updateUser);
 
-// Menghapus pengguna
-router.delete('/:id', userController.deleteUser);
+// Menghapus pengguna (memerlukan hak admin)
+router.delete('/:id', verifySession, userController.deleteUser);
 
 module.exports = router;

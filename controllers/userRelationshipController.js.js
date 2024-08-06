@@ -1,9 +1,11 @@
+// controllers/user_relationship.js
 const db = require('../config/database');
 
-
+// Mengikuti pengguna
 exports.followUser = async (req, res) => {
   try {
-    const { followerId, followingId } = req.body;
+    const followerId = req.session.userId; 
+    const { followingId } = req.body;
 
     if (followerId === followingId) {
       return res.status(400).json({ error: 'Cannot follow yourself' });
@@ -18,7 +20,6 @@ exports.followUser = async (req, res) => {
       return res.status(400).json({ error: 'Already following this user' });
     }
 
-    
     await db.query(
       'INSERT INTO user_relationships (followerId, followingId) VALUES (?, ?)',
       [followerId, followingId]
@@ -29,10 +30,11 @@ exports.followUser = async (req, res) => {
   }
 };
 
-
+// Berhenti mengikuti pengguna
 exports.unfollowUser = async (req, res) => {
   try {
-    const { followerId, followingId } = req.body;
+    const followerId = req.session.userId; 
+    const { followingId } = req.body;
 
     const [rows] = await db.query(
       'SELECT * FROM user_relationships WHERE followerId = ? AND followingId = ?',
@@ -53,7 +55,7 @@ exports.unfollowUser = async (req, res) => {
   }
 };
 
-
+// Mendapatkan jumlah pengikut
 exports.getFollowersCount = async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
@@ -73,7 +75,7 @@ exports.getFollowersCount = async (req, res) => {
   }
 };
 
-
+// Mendapatkan jumlah pengguna yang diikuti
 exports.getFollowingCount = async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
