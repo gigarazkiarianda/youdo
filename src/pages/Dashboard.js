@@ -6,6 +6,7 @@ import { FaSearch, FaChevronDown, FaBell, FaEnvelope } from "react-icons/fa";
 import { tasks, projects, followers, notifications, chats } from '../data/DashboardDummy'; 
 import { getTodosByUserId, updateTodo, deleteTodo } from "../services/todoService";
 import { logout } from "../services/authServices";
+import { getProjectsByUserId, updateProject, deleteProject, getAllProjects } from "../services/projectService";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -14,7 +15,8 @@ const Dashboard = ({ username }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState({ tasks: [], projects: [], followers: [] });
-  const [tasks, setTasks] = useState([]); // Initialize tasks state
+  const [tasks, setTasks] = useState([]); 
+  const [projects, setProjects] = useState([]);
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [currentPageProjects, setCurrentPageProjects] = useState(1);
   const [currentPageFollowers, setCurrentPageFollowers] = useState(1);
@@ -27,10 +29,9 @@ const Dashboard = ({ username }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch tasks for the current user
     const fetchTasks = async () => {
       try {
-        const userId = localStorage.getItem("userId"); // Assuming you store userId in localStorage
+        const userId = localStorage.getItem("userId"); 
         const todos = await getTodosByUserId(userId);
         setTasks(todos);
       } catch (error) {
@@ -38,10 +39,20 @@ const Dashboard = ({ username }) => {
       }
     };
 
+    const fetchProjects = async () => {
+      try {
+        const userId = localStorage.getItem("userId"); 
+        const projects = await getProjectsByUserId(userId);
+        setProjects(projects);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
     fetchTasks();
   }, []);
 
-  // Handle navigation
   const handleNavigation = (path) => {
     navigate(path);
   };
@@ -51,7 +62,6 @@ const Dashboard = ({ username }) => {
     handleNavigation("/login");
   };
 
-  // Search functionality
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setSearchResults({ tasks: [], projects: [], followers: [] });
@@ -75,7 +85,7 @@ const Dashboard = ({ username }) => {
       projects: searchProjects,
       followers: searchFollowers
     });
-  }, [searchQuery, tasks]);
+  }, [searchQuery, tasks, projects]);
 
   // Pagination handlers
   const handlePageChangeTasks = (page) => {
@@ -123,6 +133,9 @@ const Dashboard = ({ username }) => {
     if (type === 'task') {
       const updatedTaskTitle = tasks.find(task => task.id === id).title;
       await updateTodo(id, { title: updatedTaskTitle });
+    } else if (type === 'project') {
+      const updatedProjectName = projects.find(project => project.id === id).name;
+      await updateProject(id, { name: updatedProjectName });
     }
     handleEditToggle(id, type);
   };
@@ -134,8 +147,16 @@ const Dashboard = ({ username }) => {
     } catch (error) {
       console.error("Error deleting task:", error);
     }
-  }
+  };
 
+  const handleDeleteProject = async (id) => {
+    try {
+      await deleteProject(id);
+      setProjects(projects.filter(project => project.id !== id));
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -323,56 +344,70 @@ const Dashboard = ({ username }) => {
           <div className={styles.gridItem}>
             {/* Projects Container */}
             <div className={`${styles.card} ${styles.cardProjectManager}`}>
-              <h2 className={styles.projectsTitle}>Projects</h2>
-              <ul className={styles.projectList}>
-                {getPaginatedData(projects, currentPageProjects).length === 0 ? (
-                  <p className={styles.noProjectsMessage}>No projects available</p>
-                ) : (
-                  getPaginatedData(projects, currentPageProjects).map((project) => (
-                    <li key={project.id} className={styles.projectItem}>
-                      <div>
-                        <span className={styles.projectName}>{project.name}</span>
-                        <br />
-                        <span className={styles.projectStatus}>{project.status}</span>
-                      </div>
-                      <div className={styles.cardActions}>
-                        <button
-                          onClick={() => handleEditToggle(project.id, 'project')}
-                          className={styles.editButton}
-                        >
-                          {editProjectId === project.id ? 'Save' : 'Edit'}
-                        </button>
-                      </div>
-                      {editProjectId === project.id && (
-                        <input
-                          type="text"
-                          className={styles.editInput}
-                          placeholder="Edit project"
-                          defaultValue={project.name}
-                          onBlur={(e) => handleSave(project.id, 'project')}
-                        />
-                      )}
-                    </li>
-                  ))
-                )}
-              </ul>
-              <div className={styles.pagination}>
-                <button
-                  disabled={currentPageProjects === 1}
-                  onClick={() => handlePageChangeProjects(currentPageProjects - 1)}
-                >
-                  Previous
-                </button>
-                <span>{currentPageProjects}</span>
-                <button
-                  disabled={getPaginatedData(projects, currentPageProjects).length < ITEMS_PER_PAGE}
-                  onClick={() => handlePageChangeProjects(currentPageProjects + 1)}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
+  <h2 className={styles.projectsTitle}>Projects</h2>
+  <ul className={styles.projectList}>
+    {getPaginatedData(projects, currentPageProjects).length === 0 ? (
+      <p className={styles.noProjectsMessage}>No projects available</p>
+    ) : (
+      getPaginatedData(projects, currentPageProjects).map((project) => (
+        <li key={project.id} className={styles.projectItem}>
+          <div>
+            {editProjectId === project.id ? (
+              <input
+                type="text"
+                className={styles.editInput}
+                placeholder="Edit project"
+                defaultValue={project.name}
+                onBlur={(e) => handleSave(project.id, 'project')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSave(project.id, 'project');
+                  }
+                }}
+              />
+            ) : (
+              <>
+                <span className={styles.projectName}>{project.name}</span>
+                <br />
+                <span className={styles.projectStatus}>{project.description}</span>
+              </>
+            )}
           </div>
+          <div className={styles.cardActions}>
+            <button
+              onClick={() => handleEditToggle(project.id, 'project')}
+              className={styles.editButton}
+            >
+              {editProjectId === project.id ? 'Save' : 'Edit'}
+            </button>
+            <button
+              onClick={() => handleDeleteProject(project.id)}
+              className={styles.deleteButton}
+            >
+              Delete
+            </button>
+          </div>
+        </li>
+      ))
+    )}
+  </ul>
+  <div className={styles.pagination}>
+    <button
+      disabled={currentPageProjects === 1}
+      onClick={() => handlePageChangeProjects(currentPageProjects - 1)}
+    >
+      Previous
+    </button>
+    <span>{currentPageProjects}</span>
+    <button
+      disabled={getPaginatedData(projects, currentPageProjects).length < ITEMS_PER_PAGE}
+      onClick={() => handlePageChangeProjects(currentPageProjects + 1)}
+    >
+      Next
+    </button>
+  </div>
+</div>
+</div>
 
           <div className={styles.gridItem}>
             {/* Followers Container */}

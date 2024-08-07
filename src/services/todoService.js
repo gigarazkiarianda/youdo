@@ -2,21 +2,21 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
-// Create an Axios instance with cookies enabled
+
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   },
-  withCredentials: true // Allow sending cookies with requests
+  withCredentials: true 
 });
 
-// Function to get all todos
+
 export const getAllTodos = async () => {
   try {
-    console.log('Fetching all todos'); // Log before fetching todos
+    console.log('Fetching all todos'); 
     const response = await axiosInstance.get('/todos');
-    console.log('Todos fetched successfully:', response.data); // Log successful response
+    console.log('Todos fetched successfully:', response.data); 
     return response.data;
   } catch (error) {
     console.error('Error fetching todos:', error.response ? error.response.data.message : 'Network Error'); // Log error
@@ -24,12 +24,12 @@ export const getAllTodos = async () => {
   }
 };
 
-// Function to create a new todo
+
 export const createTodo = async (todo) => {
   try {
-    console.log('Creating new todo with data:', todo); // Log before creating todo
+    console.log('Creating new todo with data:', todo); 
     const response = await axiosInstance.post('/todos', todo);
-    console.log('Todo created successfully:', response.data); // Log successful response
+    console.log('Todo created successfully:', response.data); 
     return response.data;
   } catch (error) {
     console.error('Error creating todo:', error.response ? error.response.data.message : 'Network Error'); // Log error
@@ -62,7 +62,6 @@ export const deleteTodo = async (id) => {
   }
 };
 
-// Function to get todos by userId
 export const getTodosByUserId = async (userId) => {
   try {
     console.log('Fetching todos for user with ID:', userId); 

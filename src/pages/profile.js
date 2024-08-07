@@ -2,30 +2,58 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import styles from "../style/profile.module.css";
+import { getTodosByUserId, updateTodo, deleteTodo } from "../services/todoService";
+import { logout } from "../services/authServices";
+import { getUserById } from "../services/userService";
 import { FaSearch, FaChevronDown, FaBell, FaCommentDots } from "react-icons/fa";
 import { tasks, projects, notifications, chats, profile } from '../data/DashboardDummy'; // Import dummy data
 
 const ITEMS_PER_PAGE = 5;
 
-const Profile = ({ username }) => {
+const Profile = ({ username }) => { 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [tasks, setTasks] = useState([]);
   const [searchResults, setSearchResults] = useState({ tasks: [], projects: [] });
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [currentPageProjects, setCurrentPageProjects] = useState(1);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isChatsOpen, setIsChatsOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
-  const [editingProject, setEditingProject] = useState(null);
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [editProjectId, setEditProjectId] = useState(null);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
-  // Handle navigation
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const userId = localStorage.getItem("userId"); 
+        const todos = await getTodosByUserId(userId);
+        setTasks(todos);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    const fetchUser = async () => {
+      try {
+        const Id = localStorage.getItem("Id"); 
+        const userData = await getUserById(Id);
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchTasks();
+    fetchUser();
+  }, []);
+
   const handleNavigation = (path) => {
     navigate(path);
   };
 
-  // Search functionality
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setSearchResults({ tasks: [], projects: [] });
@@ -44,9 +72,8 @@ const Profile = ({ username }) => {
       tasks: searchTasks,
       projects: searchProjects
     });
-  }, [searchQuery]);
+  }, [searchQuery, tasks]);
 
-  // Pagination handlers
   const handlePageChangeTasks = (page) => {
     setCurrentPageTasks(page);
   };
@@ -55,7 +82,6 @@ const Profile = ({ username }) => {
     setCurrentPageProjects(page);
   };
 
-  // Get paginated data
   const getPaginatedData = (data, currentPage) => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
@@ -63,24 +89,44 @@ const Profile = ({ username }) => {
   };
 
   // Edit and Save functionality
-  const handleEditTask = (task) => {
-    setEditingTask(task);
+  const handleEditToggle = (id, type) => {
+    if (type === 'task') {
+      setEditTaskId(editTaskId === id ? null : id);
+    } else if (type === 'project') {
+      setEditProjectId(editProjectId === id ? null : id);
+    }
   };
 
-  const handleSaveTask = (taskId) => {
-    // Implement save functionality here
-    setEditingTask(null);
+  const handleSave = async (id, type) => {
+    if (type === 'task') {
+      const updatedTaskTitle = tasks.find(task => task.id === id).title;
+      await updateTodo(id, { title: updatedTaskTitle });
+    }
+    handleEditToggle(id, type);
   };
 
-  const handleEditProject = (project) => {
-    setEditingProject(project);
+  const handleDeleteTask = async (id) => {
+    try {
+      await deleteTodo(id);
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+  const handleEditProject = (projectId) => {
+    console.log('Edit Project');
   };
 
   const handleSaveProject = (projectId) => {
     // Implement save functionality here
-    setEditingProject(null);
+    console.log('Saved Project');
   };
 
+  const handleLogout = async () => {
+    await logout();
+    handleNavigation("/login");
+  };
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -151,8 +197,7 @@ const Profile = ({ username }) => {
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/profile")}>Profile</div>
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/todos")}>MyTodo</div>
               <div className={styles.dropdownItem} onClick={() => handleNavigation("/settings")}>Settings</div>
-              <div className={styles.dropdownItem} onClick={() => handleNavigation("/login")}>Logout</div>
-              
+              <div className={styles.dropdownItem} onClick={handleLogout}>Logout</div>
             </div>
           )}
         </div>
@@ -221,7 +266,7 @@ const Profile = ({ username }) => {
                     </span>
                   </div>
                 </div>
-                <div className={styles.profileUsername}>{profile.username}</div>
+                <div className={styles.profileUsername}>{user.username}</div>
                 <div className={styles.profileDescription}>{profile.deskripsi}</div>
               </div>
               <button className={styles.editProfileButton}><a href="/edit-profile">Edit Profile</a></button>
@@ -233,8 +278,19 @@ const Profile = ({ username }) => {
               <ul className={styles.taskList}>
                 {getPaginatedData(tasks, currentPageTasks).map((task) => (
                   <li key={task.id} className={styles.taskItem}>
-                    {task.title} - {task.date}
-                    <button onClick={() => handleEditTask(task)}>Edit</button>
+                    {task.title} - {task.deadline}
+                    <button
+                          onClick={() => handleEditToggle(task.id, 'task')}
+                          className={styles.editButton}
+                        >
+                          {editTaskId === task.id ? 'Save' : 'Edit'}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTask(task.id)}
+                          className={styles.deleteButton}
+                        >
+                          Delete
+                        </button>
                   </li>
                 ))}
               </ul>
