@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('user_chat_rooms', {
-      user_id: {
+      id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

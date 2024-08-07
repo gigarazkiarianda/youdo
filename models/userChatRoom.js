@@ -7,7 +7,7 @@ class UserChatRoom extends Model {}
 
 UserChatRoom.init(
   {
-    user_id: {
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

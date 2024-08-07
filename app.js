@@ -59,7 +59,7 @@ const userRelationshipRoutes = require('./routes/userRelationshipRoutes');
 app.use('/api/auth', authRoutes); // Authentication routes
 app.use('/api/users', userRoutes); // User routes
 app.use('/api/projects', projectRoutes); // Project routes
-app.use('/api/todos', todoRoutes); // Todo routes
+app.use('/api/todos', todoRoutes); 
 app.use('/api/notifications', notificationRoutes); // Notification routes
 app.use('/api/relationship', userRelationshipRoutes); // User relationship routes
 
